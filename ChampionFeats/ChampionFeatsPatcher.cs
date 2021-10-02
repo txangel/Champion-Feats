@@ -209,7 +209,7 @@ namespace ChampionFeats
                     }
                     bp.Ranks = 1;
                     bp.SetName("Champion Spell Blasts");
-                    bp.SetDescription("Your magical arts strike hard, no matter how tough the foe. You gain +1 damage to spell attacks, with an extra +1 every third level starting at caster level 4.");
+                    bp.SetDescription("Your magical arts strike hard, no matter how tough the foe. You gain +1 damage to spell attacks per damage die, with an extra +1 every third level starting at caster level 4.");
                     bp.m_DescriptionShort = bp.m_Description;
                     bp.AddComponent(Helpers.Create<AddScalingSpellDamage>(c => {
                         c.Value = new ContextValue()

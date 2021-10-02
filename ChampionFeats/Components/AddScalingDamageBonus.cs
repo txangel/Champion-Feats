@@ -20,7 +20,7 @@ namespace ChampionFeats.Components
         {
             int totalBonus;
 
-            totalBonus = value.Calculate(Context) + Math.Max(Bonus.Calculate(Context), 0);
+            totalBonus = value.Calculate(Context) + Math.Max(Bonus.Calculate(Context), 1);
 
             evt.AddDamageModifier(totalBonus, Fact, ModifierDescriptor.UntypedStackable);
         }

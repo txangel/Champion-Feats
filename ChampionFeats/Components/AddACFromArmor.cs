@@ -10,7 +10,7 @@ using System;
 using Kingmaker.Blueprints.Items.Armors;
 namespace ChampionFeats.Components
 {
-    [AllowedOn(typeof(BlueprintUnitFact), false)]
+
     [TypeId("b8379d7a188f4ef997d636479aba8a2c")]
     class AddACFromArmor : UnitFactComponentDelegate,
            IUnitActiveEquipmentSetHandler,

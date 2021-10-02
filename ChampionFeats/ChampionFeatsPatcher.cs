@@ -285,6 +285,9 @@ namespace ChampionFeats
                 });
 
 
+                FeatTools.AddAsFeat(ChampionOffenceSpellPen);
+                FeatTools.AddAsFeat(ChampionOffenceSpellDC);
+                FeatTools.AddAsFeat(ChampionOffenceSpellDam);
             }
         }
     }

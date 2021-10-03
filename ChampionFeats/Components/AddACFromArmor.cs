@@ -68,7 +68,7 @@ namespace ChampionFeats.Components
         private int CalculateModifier()
         {
             int itemBonus;
-            switch (Owner.Body.Armor.Armor.ArmorType())
+            switch (Owner.Body.Armor.Armor.Blueprint.ProficiencyGroup)
             {
                 case ArmorProficiencyGroup.Light:
                 case ArmorProficiencyGroup.LightBarding:

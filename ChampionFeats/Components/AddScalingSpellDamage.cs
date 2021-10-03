@@ -35,7 +35,7 @@ namespace ChampionFeats.Components
                 {
                     continue;
                 }
-                int bonus = Value.Calculate(Context);
+                int bonus = Value.Calculate(Context) * baseDamage.Dice.m_Rolls;
                 baseDamage.AddModifier(Math.Max(1, bonus), Fact);
             }
         }

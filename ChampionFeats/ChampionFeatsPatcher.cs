@@ -181,7 +181,7 @@ namespace ChampionFeats
                     }
                     bp.Ranks = 1;
                     bp.SetName("Champion Strikes");
-                    bp.SetDescription("Your weapon attacks strike hard, no matter how tough the foe. You gain +1 damage to attacks, with an extra +1 every third level starting at level 4.");
+                    bp.SetDescription("Your weapon attacks strike hard, no matter how tough the foe. You gain +1 damage to attacks, with an extra +1 every second level starting at level 3.");
                     bp.m_DescriptionShort = bp.m_Description;
                     bp.AddComponent(Helpers.Create<AddScalingDamageBonus>(c => {
                         c.value = new ContextValue()
@@ -193,7 +193,7 @@ namespace ChampionFeats
                             ValueType = ContextValueType.Rank
                         };
                     }));
-                    bp.AddComponent(Helpers.CreateContextRankConfig(ContextRankBaseValueType.CharacterLevel, ContextRankProgression.StartPlusDivStep, AbilityRankType.Default, null, null, 4, 3));
+                    bp.AddComponent(Helpers.CreateContextRankConfig(ContextRankBaseValueType.CharacterLevel, ContextRankProgression.StartPlusDivStep, AbilityRankType.Default, null, null, 3, 2));
                 });
 
                 if (!Main.settings.FeatsAreMythic)

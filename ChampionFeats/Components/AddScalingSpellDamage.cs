@@ -27,8 +27,14 @@ namespace ChampionFeats.Components
             {
                 return;
             }
+
             foreach (BaseDamage baseDamage in evt.DamageBundle)
             {
+                
+                if(baseDamage.Dice.Dice == Kingmaker.RuleSystem.DiceType.Zero) // trying to account for getting spells that shouldn't be damaging, apparently?
+                {
+                    continue;
+                }
                 int bonus = Value.Calculate(Context);
                 baseDamage.AddModifier(Math.Max(1, bonus), Fact);
             }

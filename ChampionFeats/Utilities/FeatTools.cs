@@ -25,6 +25,13 @@ namespace ChampionFeats.Utilities {
             BasicFeatSelection.AddFeatures(feature);
             ExtraFeatMythicFeat.AddFeatures(feature);
         }
+        public static void AddAsMythicFeats(BlueprintFeature feature)
+        {
+            var BasicFeatSelection = Resources.GetBlueprint<BlueprintFeatureSelection>("9ee0f6745f555484299b0a1563b99d81");
+            var ExtraFeatMythicFeat = Resources.GetBlueprint<BlueprintFeatureSelection>("8a6a511c55e67d04db328cc49aaad2b8.");
+            BasicFeatSelection.AddFeatures(feature);
+            ExtraFeatMythicFeat.AddFeatures(feature);
+        }
         public static void AddAsRogueTalent(BlueprintFeature feature) {
             var TalentSelections = new BlueprintFeatureSelection[] {
                 Resources.GetBlueprint<BlueprintFeatureSelection>("290bbcc3c3bb92144b853fd8fb8ff452"), //SylvanTricksterTalentSelection

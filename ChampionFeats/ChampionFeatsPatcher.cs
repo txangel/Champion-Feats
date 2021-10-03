@@ -120,8 +120,16 @@ namespace ChampionFeats
                 });
 
 
-                FeatTools.AddAsFeat(ChampionDefenceAC);
-                FeatTools.AddAsFeat(ChampionDefenceDR);
+                if (!Main.settings.FeatsAreMythic)
+                {
+                    FeatTools.AddAsFeat(ChampionDefenceAC);
+                    FeatTools.AddAsFeat(ChampionDefenceDR);
+                }
+                else
+                {
+                    FeatTools.AddAsMythicFeats(ChampionDefenceAC);
+                    FeatTools.AddAsMythicFeats(ChampionDefenceDR);
+                }
 
             }
             static void AddChampionOffences()
@@ -152,7 +160,7 @@ namespace ChampionFeats
                         };
                         c.Descriptor = ModifierDescriptor.UntypedStackable;
                         
-                        bp.AddComponent(Helpers.CreateContextRankConfig(ContextRankBaseValueType.CharacterLevel, ContextRankProgression.StartPlusDivStep, AbilityRankType.Default, null, null, 3, 1));
+                        bp.AddComponent(Helpers.CreateContextRankConfig(ContextRankBaseValueType.CharacterLevel, ContextRankProgression.StartPlusDivStep, AbilityRankType.Default, null, null, 3, 2));
                     }));
 
 
@@ -165,6 +173,7 @@ namespace ChampionFeats
                     if (!Main.settings.FeatsAreMythic)
                     {
                         bp.Groups = new FeatureGroup[] { FeatureGroup.CombatFeat, FeatureGroup.Feat };
+
                     }
                     else
                     {
@@ -187,10 +196,16 @@ namespace ChampionFeats
                     bp.AddComponent(Helpers.CreateContextRankConfig(ContextRankBaseValueType.CharacterLevel, ContextRankProgression.StartPlusDivStep, AbilityRankType.Default, null, null, 4, 3));
                 });
 
-
-                FeatTools.AddAsFeat(ChampionOffenceAB);
-                FeatTools.AddAsFeat(ChampionOffenceDam);
-
+                if (!Main.settings.FeatsAreMythic)
+                {
+                    FeatTools.AddAsFeat(ChampionOffenceAB);
+                    FeatTools.AddAsFeat(ChampionOffenceDam);
+                }
+                else
+                {
+                    FeatTools.AddAsMythicFeats(ChampionOffenceAB);
+                    FeatTools.AddAsMythicFeats(ChampionOffenceDam);
+                }
             }
             static void AddChampionMagics()
             {
@@ -284,10 +299,19 @@ namespace ChampionFeats
                     }));
                 });
 
+                if (!Main.settings.FeatsAreMythic)
+                {
+                    FeatTools.AddAsFeat(ChampionOffenceSpellPen);
+                    FeatTools.AddAsFeat(ChampionOffenceSpellDC);
+                    FeatTools.AddAsFeat(ChampionOffenceSpellDam);
+                }
+                else
+                {
+                    FeatTools.AddAsMythicFeats(ChampionOffenceSpellPen);
+                    FeatTools.AddAsMythicFeats(ChampionOffenceSpellDC);
+                    FeatTools.AddAsMythicFeats(ChampionOffenceSpellDam);
+                }
 
-                FeatTools.AddAsFeat(ChampionOffenceSpellPen);
-                FeatTools.AddAsFeat(ChampionOffenceSpellDC);
-                FeatTools.AddAsFeat(ChampionOffenceSpellDam);
             }
         }
     }

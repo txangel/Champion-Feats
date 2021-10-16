@@ -101,7 +101,6 @@
     <Compile Include="Components\AddACFromArmor.cs" />
     <Compile Include="Components\AddScalingAttackBonus.cs" />
     <Compile Include="Components\AddScalingDamageBonus.cs" />
-    <Compile Include="Components\AddScalingDRFromPhysical.cs" />
     <Compile Include="Components\AddScalingSpellDamage.cs" />
     <Compile Include="Components\AddScalingSpellDC.cs" />
     <Compile Include="Components\AddScalingSpellPenetration.cs" />

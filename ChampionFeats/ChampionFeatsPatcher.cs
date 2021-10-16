@@ -91,7 +91,7 @@ namespace ChampionFeats
                     bp.SetName("Champion Guard");
                     bp.SetDescription("You stand firm and resist whatever physical harm comes for you, no matter what it is. You gain +5 DR/-, and every 5th level increases it by +5.");
                     bp.m_DescriptionShort = bp.m_Description;
-                    bp.AddComponent(Helpers.Create<AddScalingDRFromPhysical>(c => {
+                    bp.AddComponent(Helpers.Create<AddDamageResistancePhysical>(c => {
 
 
                         c.name = "RMChampionGuardBuff";
@@ -102,13 +102,11 @@ namespace ChampionFeats
                         c.Reality = DamageRealityType.Ghost;
                         c.Value = new ContextValue()
                         {
-                            
+                            ValueType = ContextValueType.Rank,
                             Value = 5
+                            
                         };
-                        c.bonusValue = new ContextValue()
-                        {
-                            ValueType = ContextValueType.Rank
-                        };
+
 
                         c.Pool = new ContextValue()
                         {
@@ -116,7 +114,49 @@ namespace ChampionFeats
                         };
 
                     }));
-                    bp.AddComponent(Helpers.CreateContextRankConfig(ContextRankBaseValueType.CharacterLevel, ContextRankProgression.OnePlusDivStep, AbilityRankType.Default,null,null,0,5));
+                    var RankConfig = Helpers.CreateContextRankConfig(ContextRankBaseValueType.CharacterLevel, ContextRankProgression.Custom, AbilityRankType.Default, 5, null, 0, 5);
+                    RankConfig.m_UseMin = true;
+                    var customProg = new ContextRankConfig.CustomProgressionItem[]
+                    {
+                     new ContextRankConfig.CustomProgressionItem{
+                           ProgressionValue = 5,
+                           BaseValue = 0
+                       },
+                       new ContextRankConfig.CustomProgressionItem{
+                           ProgressionValue = 10,
+                           BaseValue = 1
+                       },
+                       new ContextRankConfig.CustomProgressionItem{
+                           ProgressionValue = 15,
+                           BaseValue = 2
+                       },
+                       new ContextRankConfig.CustomProgressionItem{
+                           ProgressionValue = 20,
+                           BaseValue = 15
+                       },
+                       new ContextRankConfig.CustomProgressionItem{
+                           ProgressionValue = 25,
+                           BaseValue = 20
+                       },
+                       new ContextRankConfig.CustomProgressionItem{
+                           ProgressionValue = 30,
+                           BaseValue = 25
+                       },
+                       new ContextRankConfig.CustomProgressionItem{
+                           ProgressionValue = 35,
+                           BaseValue = 30
+                       },
+                       new ContextRankConfig.CustomProgressionItem{
+                           ProgressionValue = 40,
+                           BaseValue = 35
+                       },
+                       new ContextRankConfig.CustomProgressionItem{
+                           ProgressionValue = 45,
+                           BaseValue = 40
+                       }
+                    };
+                    RankConfig.m_CustomProgression = customProg;
+                    bp.AddComponent(RankConfig);
                 });
 
 

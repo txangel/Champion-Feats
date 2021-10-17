@@ -28,7 +28,7 @@ namespace ChampionFeats.Utilities {
         public static void AddAsMythicFeats(BlueprintFeature feature)
         {
             var BasicFeatSelection = Resources.GetBlueprint<BlueprintFeatureSelection>("9ee0f6745f555484299b0a1563b99d81");
-            var ExtraFeatMythicFeat = Resources.GetBlueprint<BlueprintFeatureSelection>("8a6a511c55e67d04db328cc49aaad2b8.");
+            var ExtraFeatMythicFeat = Resources.GetBlueprint<BlueprintFeatureSelection>("8a6a511c55e67d04db328cc49aaad2b8");
             BasicFeatSelection.AddFeatures(feature);
             ExtraFeatMythicFeat.AddFeatures(feature);
         }

@@ -114,10 +114,13 @@ namespace ChampionFeats
                         };
 
                     }));
-                    var RankConfig = Helpers.CreateContextRankConfig(ContextRankBaseValueType.CharacterLevel, ContextRankProgression.Custom, AbilityRankType.Default, 5, null, 0, 5);
-                    RankConfig.m_UseMin = true;
-                    var customProg = new ContextRankConfig.CustomProgressionItem[]
-                    {
+ 
+                });
+
+                var RankConfig = Helpers.CreateContextRankConfig(ContextRankBaseValueType.CharacterLevel, ContextRankProgression.Custom, AbilityRankType.Default, 5, null, 0, 5);
+                RankConfig.m_UseMin = true;
+                var customProg = new ContextRankConfig.CustomProgressionItem[]
+                {
                      new ContextRankConfig.CustomProgressionItem{
                            ProgressionValue = 5,
                            BaseValue = 0
@@ -132,34 +135,31 @@ namespace ChampionFeats
                        },
                        new ContextRankConfig.CustomProgressionItem{
                            ProgressionValue = 20,
-                           BaseValue = 15
+                           BaseValue = 3
                        },
                        new ContextRankConfig.CustomProgressionItem{
                            ProgressionValue = 25,
-                           BaseValue = 20
+                           BaseValue = 4
                        },
                        new ContextRankConfig.CustomProgressionItem{
                            ProgressionValue = 30,
-                           BaseValue = 25
+                           BaseValue = 5
                        },
                        new ContextRankConfig.CustomProgressionItem{
                            ProgressionValue = 35,
-                           BaseValue = 30
+                           BaseValue = 6
                        },
                        new ContextRankConfig.CustomProgressionItem{
                            ProgressionValue = 40,
-                           BaseValue = 35
+                           BaseValue = 7
                        },
                        new ContextRankConfig.CustomProgressionItem{
                            ProgressionValue = 45,
-                           BaseValue = 40
+                           BaseValue = 8
                        }
-                    };
-                    RankConfig.m_CustomProgression = customProg;
-                    bp.AddComponent(RankConfig);
-                });
-
-
+                };
+                RankConfig.m_CustomProgression = customProg;
+                ChampionDefenceDR.AddComponent(RankConfig);
                 if (!Main.settings.FeatsAreMythic)
                 {
                     FeatTools.AddAsFeat(ChampionDefenceAC);
@@ -264,7 +264,7 @@ namespace ChampionFeats
                     }
                     bp.Ranks = 1;
                     bp.SetName("Champion Spell Blasts");
-                    bp.SetDescription("Your magical arts strike hard, no matter how tough the foe. You gain +1 damage to spell attacks per damage die, with an extra +1 every third level starting at caster level 4.");
+                    bp.SetDescription("Your magical arts strike hard, no matter how tough the foe. You gain +1 damage to spell attacks per damage die, with an extra +1 every third caster level starting at caster level 4.");
                     bp.m_DescriptionShort = bp.m_Description;
                     bp.AddComponent(Helpers.Create<AddScalingSpellDamage>(c => {
                         c.Value = new ContextValue()

@@ -30,11 +30,13 @@ namespace ChampionFeats.Components
 
             foreach (BaseDamage baseDamage in evt.DamageBundle)
             {
-                
+                Main.Log("Context bonus is " + Value.Calculate(Context));
+               
                 if(baseDamage.Dice.Dice == Kingmaker.RuleSystem.DiceType.Zero) // trying to account for getting spells that shouldn't be damaging, apparently?
                 {
                     continue;
                 }
+                Main.Log("Number of dice rolls is " + baseDamage.Dice.m_Rolls);
                 int bonus = Value.Calculate(Context) * baseDamage.Dice.m_Rolls;
                 baseDamage.AddModifier(Math.Max(1, bonus), Fact);
             }

@@ -264,7 +264,7 @@ namespace ChampionFeats
                     }
                     bp.Ranks = 1;
                     bp.SetName("Champion Spell Blasts");
-                    bp.SetDescription("Your magical arts strike hard, no matter how tough the foe. You gain +1 damage to spell attacks per damage die, with an extra +1 every third caster level starting at caster level 4.");
+                    bp.SetDescription("Your magical arts strike hard, no matter how tough the foe. You gain +1 damage to spell attacks per damage die, with an extra +1 every third character level starting at character level 4.");
                     bp.m_DescriptionShort = bp.m_Description;
                     bp.AddComponent(Helpers.Create<AddScalingSpellDamage>(c => {
                         c.Value = new ContextValue()
@@ -273,7 +273,7 @@ namespace ChampionFeats
                             ValueType = ContextValueType.Rank
                         };
                     }));
-                    bp.AddComponent(Helpers.CreateContextRankConfig(ContextRankBaseValueType.CasterLevel, ContextRankProgression.StartPlusDivStep, AbilityRankType.Default, null, null, 4, 3));
+                    bp.AddComponent(Helpers.CreateContextRankConfig(ContextRankBaseValueType.CharacterLevel, ContextRankProgression.StartPlusDivStep, AbilityRankType.Default, null, null, 4, 3));
                     bp.AddComponent(Helpers.Create<RecommendationRequiresSpellbook>());
                     bp.AddComponent(Helpers.Create<FeatureTagsComponent>(c => {
                         c.FeatureTags = FeatureTag.Magic;
@@ -293,7 +293,7 @@ namespace ChampionFeats
                     }
                     bp.Ranks = 1;
                     bp.SetName("Champion Spell Force");
-                    bp.SetDescription("Your magical arts are overwhelming for enemies to deal with. You gain +1 to the DC of your spells, with an extra +1 for every caster level.");
+                    bp.SetDescription("Your magical arts are overwhelming for enemies to deal with. You gain +1 to the DC of your spells, with an extra +1 for every character level.");
                     bp.m_DescriptionShort = bp.m_Description;
                     bp.AddComponent(Helpers.Create<AddScalingSpellDC>(c => {
                         c.Value = new ContextValue()
@@ -302,7 +302,7 @@ namespace ChampionFeats
                             ValueType = ContextValueType.Rank
                         };
                     }));
-                    bp.AddComponent(Helpers.CreateContextRankConfig(ContextRankBaseValueType.CasterLevel, ContextRankProgression.AsIs, AbilityRankType.Default));
+                    bp.AddComponent(Helpers.CreateContextRankConfig(ContextRankBaseValueType.CharacterLevel, ContextRankProgression.AsIs, AbilityRankType.Default));
                     bp.AddComponent(Helpers.Create<RecommendationRequiresSpellbook>());
                     bp.AddComponent(Helpers.Create<FeatureTagsComponent>(c => {
                         c.FeatureTags = FeatureTag.Magic;
@@ -322,7 +322,7 @@ namespace ChampionFeats
                     }
                     bp.Ranks = 1;
                     bp.SetName("Champion Spell Penetration");
-                    bp.SetDescription("Your magical arts are trained to pierce even the thickest of protections. Half your caster level (or +1 at the lowest) is added as bonus spell penetration. If you have Spell Penetration, it's full caster level instead.");
+                    bp.SetDescription("Your magical arts are trained to pierce even the thickest of protections. Half your character level (or +1 at the lowest) is added as bonus spell penetration. If you have Spell Penetration, it's full character level instead.");
                     bp.m_DescriptionShort = bp.m_Description;
                     bp.AddComponent(Helpers.Create<AddScalingSpellPenetration>(c => {
                         c.Value = new ContextValue()
@@ -332,7 +332,7 @@ namespace ChampionFeats
                         };
                         c.m_SpellPen = SpellPen.ToReference<BlueprintUnitFactReference>();
                     }));
-                    bp.AddComponent(Helpers.CreateContextRankConfig(ContextRankBaseValueType.CasterLevel, ContextRankProgression.AsIs, AbilityRankType.Default));
+                    bp.AddComponent(Helpers.CreateContextRankConfig(ContextRankBaseValueType.CharacterLevel, ContextRankProgression.AsIs, AbilityRankType.Default));
                     bp.AddComponent(Helpers.Create<RecommendationRequiresSpellbook>());
                     bp.AddComponent(Helpers.Create<FeatureTagsComponent>(c => {
                         c.FeatureTags = FeatureTag.Magic;

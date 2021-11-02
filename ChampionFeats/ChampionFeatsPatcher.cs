@@ -127,35 +127,35 @@ namespace ChampionFeats
                        },
                        new ContextRankConfig.CustomProgressionItem{
                            ProgressionValue = 10,
-                           BaseValue = 1
-                       },
-                       new ContextRankConfig.CustomProgressionItem{
-                           ProgressionValue = 15,
-                           BaseValue = 2
-                       },
-                       new ContextRankConfig.CustomProgressionItem{
-                           ProgressionValue = 20,
-                           BaseValue = 3
-                       },
-                       new ContextRankConfig.CustomProgressionItem{
-                           ProgressionValue = 25,
-                           BaseValue = 4
-                       },
-                       new ContextRankConfig.CustomProgressionItem{
-                           ProgressionValue = 30,
                            BaseValue = 5
                        },
                        new ContextRankConfig.CustomProgressionItem{
+                           ProgressionValue = 15,
+                           BaseValue = 10
+                       },
+                       new ContextRankConfig.CustomProgressionItem{
+                           ProgressionValue = 20,
+                           BaseValue = 15
+                       },
+                       new ContextRankConfig.CustomProgressionItem{
+                           ProgressionValue = 25,
+                           BaseValue = 20
+                       },
+                       new ContextRankConfig.CustomProgressionItem{
+                           ProgressionValue = 30,
+                           BaseValue = 25
+                       },
+                       new ContextRankConfig.CustomProgressionItem{
                            ProgressionValue = 35,
-                           BaseValue = 6
+                           BaseValue = 30
                        },
                        new ContextRankConfig.CustomProgressionItem{
                            ProgressionValue = 40,
-                           BaseValue = 7
+                           BaseValue = 35
                        },
                        new ContextRankConfig.CustomProgressionItem{
                            ProgressionValue = 45,
-                           BaseValue = 8
+                           BaseValue = 40
                        }
                 };
                 RankConfig.m_CustomProgression = customProg;
@@ -200,13 +200,90 @@ namespace ChampionFeats
                         };
                         c.Descriptor = ModifierDescriptor.UntypedStackable;
                         
-                        bp.AddComponent(Helpers.CreateContextRankConfig(ContextRankBaseValueType.CharacterLevel, ContextRankProgression.StartPlusDivStep, AbilityRankType.Default, null, null, 3, 2));
+                  //      bp.AddComponent(Helpers.CreateContextRankConfig(ContextRankBaseValueType.CharacterLevel, ContextRankProgression.StartPlusDivStep, AbilityRankType.Default, null, null, 2, 2));
                     }));
-
 
                 });
 
-
+                var RankConfig = Helpers.CreateContextRankConfig(ContextRankBaseValueType.CharacterLevel, ContextRankProgression.Custom, AbilityRankType.Default, 1, null, 3, 2);
+                RankConfig.m_UseMin = true;
+                var customProg = new ContextRankConfig.CustomProgressionItem[]
+                {
+                     new ContextRankConfig.CustomProgressionItem{
+                           ProgressionValue = 1,
+                           BaseValue = 0
+                       },
+                       new ContextRankConfig.CustomProgressionItem{
+                           ProgressionValue = 2,
+                           BaseValue = 3
+                       },
+                       new ContextRankConfig.CustomProgressionItem{
+                           ProgressionValue = 3,
+                           BaseValue = 5
+                       },
+                       new ContextRankConfig.CustomProgressionItem{
+                           ProgressionValue = 4,
+                           BaseValue = 7
+                       },
+                       new ContextRankConfig.CustomProgressionItem{
+                           ProgressionValue = 5,
+                           BaseValue = 9
+                       },
+                       new ContextRankConfig.CustomProgressionItem{
+                           ProgressionValue = 7,
+                           BaseValue = 11
+                       },
+                       new ContextRankConfig.CustomProgressionItem{
+                           ProgressionValue = 8,
+                           BaseValue = 13
+                       },
+                       new ContextRankConfig.CustomProgressionItem{
+                           ProgressionValue = 9,
+                           BaseValue = 15
+                       },
+                       new ContextRankConfig.CustomProgressionItem{
+                           ProgressionValue = 10,
+                           BaseValue = 17
+                       },
+                       new ContextRankConfig.CustomProgressionItem{
+                           ProgressionValue = 11,
+                           BaseValue = 19
+                       },
+                       new ContextRankConfig.CustomProgressionItem{
+                           ProgressionValue = 12,
+                           BaseValue = 21
+                       },
+                       new ContextRankConfig.CustomProgressionItem{
+                           ProgressionValue = 13,
+                           BaseValue = 23
+                       },
+                       new ContextRankConfig.CustomProgressionItem{
+                           ProgressionValue = 14,
+                           BaseValue = 25
+                       },
+                       new ContextRankConfig.CustomProgressionItem{
+                           ProgressionValue = 15,
+                           BaseValue = 27
+                       },
+                       new ContextRankConfig.CustomProgressionItem{
+                           ProgressionValue = 17,
+                           BaseValue = 29
+                       },
+                       new ContextRankConfig.CustomProgressionItem{
+                           ProgressionValue = 19,
+                           BaseValue = 31
+                       },
+                       new ContextRankConfig.CustomProgressionItem{
+                           ProgressionValue = 21,
+                           BaseValue = 33
+                       },
+                       new ContextRankConfig.CustomProgressionItem{
+                           ProgressionValue = 22,
+                           BaseValue = 35
+                       }
+                };
+                RankConfig.m_CustomProgression = customProg;
+                ChampionOffenceAB.AddComponent(RankConfig);
                 var ChampionOffenceDam = Helpers.CreateBlueprint<BlueprintFeature>("RMChampionFeatOffenceDam", bp => {
                     bp.IsClassFeature = true;
                     bp.ReapplyOnLevelUp = true;

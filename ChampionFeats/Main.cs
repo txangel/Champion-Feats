@@ -89,6 +89,7 @@ namespace ChampionFeats
             return new InvalidOperationException(message);
         }
 
+        /*
         public static LocalizedString MakeLocalizedString(string key, string value)
         {
             LocalizationManager.CurrentPack.Strings[key] = value;
@@ -96,5 +97,6 @@ namespace ChampionFeats
             typeof(LocalizedString).GetField("m_Key", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(localizedString, key);
             return localizedString;
         }
+        */
     }
 }

@@ -19,14 +19,13 @@ namespace ChampionFeats.Components
            IUnitEquipmentHandler,
            IUnitBuffHandler
     {
-
-        public override void OnTurnOn()
+        protected override void OnTurnOn()
         {
             base.OnTurnOn();
             UpdateModifier();
         }
 
-        public override void OnTurnOff()
+        protected override void OnTurnOff()
         {
             base.OnTurnOff();
             DeactivateModifier();

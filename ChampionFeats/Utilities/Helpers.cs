@@ -117,8 +117,8 @@ namespace ChampionFeats.Utilities {
             if (current != "" && current != value)
             {
                 Main.LogDebug($"Info: duplicate localized string `{key}`, different text.");
-#endif
             }
+#endif
 
             LocalizationManager.CurrentPack.PutString(key, value);
             localized = new LocalizedString { m_ShouldProcess = false, m_Key = key };

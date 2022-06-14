@@ -22,6 +22,7 @@ using System.Linq;
 using System.Reflection;
 using ChampionFeats.Config;
 using ChampionFeats;
+using static Kingmaker.Localization.LocalizationPack;
 
 namespace ChampionFeats.Utilities {
     public static class Helpers {
@@ -111,14 +112,14 @@ namespace ChampionFeats.Utilities {
             if (textToLocalizedString.TryGetValue(value, out localized)) {
                 return localized;
             }
-            var strings = LocalizationManager.CurrentPack.Strings;
-            String oldValue;
-            if (strings.TryGetValue(key, out oldValue) && value != oldValue) {
+            StringEntry oldEntry;
+            if (LocalizationManager.CurrentPack.m_Strings.TryGetValue(key, out oldEntry) && value != oldEntry.Text) {
 #if DEBUG
                 Main.LogDebug($"Info: duplicate localized string `{key}`, different text.");
 #endif
             }
-            strings[key] = value;
+            //strings[key] = value;
+            LocalizationManager.CurrentPack.PutString(key, value);
             localized = new LocalizedString {
                 m_Key = key
             };

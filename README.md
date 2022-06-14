@@ -28,6 +28,9 @@ You can adjust whether these should be considered normal feats or Mythic feats i
 3. Download the Champion Feats mod
 4. Install the mod by dragging the zip file from step 5 into the Unity Mod Manager window under the Mods tab
 
+**How to build** (updated)
+Now requires you first create an environment variable, called WrathInstallDir, containing the path to the base Wrath folder. All Wrath includes are now relative to that value.
+
 **Thanks**
 
 Vek17 and their Tabletop Tweaks mod, couldn't understand how to actually do some of this stuff I couldn't dissect and take apart how your mod worked. 

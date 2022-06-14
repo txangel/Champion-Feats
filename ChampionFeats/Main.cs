@@ -91,7 +91,7 @@ namespace ChampionFeats
 
         public static LocalizedString MakeLocalizedString(string key, string value)
         {
-            LocalizationManager.CurrentPack.Strings[key] = value;
+            LocalizationManager.CurrentPack.PutString(key, value);
             LocalizedString localizedString = new LocalizedString();
             typeof(LocalizedString).GetField("m_Key", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(localizedString, key);
             return localizedString;

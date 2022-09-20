@@ -11,6 +11,8 @@ Champion Guard - adds a +5 DR/- bonus. Every 5th level increases it by another +
 
 Champion Aim - adds a +1 attack bonus to any weapon. Increases by +2 for every two levels starting at level 3.
 
+Champion Saves - adds +2 per level to all saving throws
+
 Champion Strikes - adds +1 damage to any weapon attacks. Increases by +1 for every three levels starting at level 4.
 
 Champion Spell Blasts - adds +1 damage to spell attacks. Increases by +1 for every three levels starting at caster level 4.

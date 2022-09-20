@@ -34,6 +34,32 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>7.1</LangVersion>
   </PropertyGroup>
+  
+  
+  
+
+	<Target Name="CheckEnvironmentVars">
+		<Error Text="Please set the WrathInstallDir environment variable." Condition="'$(WrathInstallDir)' == ''" ContinueOnError="false" />
+	</Target>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Install|AnyCPU' Or '$(Configuration)|$(Platform)' == 'Release Install|AnyCPU'">
+		<OutputPath>$(WrathInstallDir)\Mods\ChampionFeats\</OutputPath>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release Install|AnyCPU'">
+		<Optimize>true</Optimize>
+		<DefineConstants>TRACE</DefineConstants>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug Install|AnyCPU'">
+		<Optimize>false</Optimize>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
+  
+  
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -105,6 +131,7 @@
     <Compile Include="Components\AddACFromArmor.cs" />
     <Compile Include="Components\AddScalingAttackBonus.cs" />
     <Compile Include="Components\AddScalingDamageBonus.cs" />
+    <Compile Include="Components\AddScalingSavingThrows.cs" />
     <Compile Include="Components\AddScalingSpellDamage.cs" />
     <Compile Include="Components\AddScalingSpellDC.cs" />
     <Compile Include="Components\AddScalingSpellPenetration.cs" />

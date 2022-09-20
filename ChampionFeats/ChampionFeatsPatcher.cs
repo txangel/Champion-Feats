@@ -27,6 +27,7 @@ using ChampionFeats.Components;
 using Kingmaker.UnitLogic.FactLogic;
 using Kingmaker.Enums.Damage;
 using Kingmaker.Designers.Mechanics.Recommendations;
+using Kingmaker.EntitySystem.Stats;
 
 namespace ChampionFeats
 {
@@ -162,18 +163,58 @@ namespace ChampionFeats
                 };
                 RankConfig.m_CustomProgression = customProg;
                 ChampionDefenceDR.AddComponent(RankConfig);
+
+                var ChampionDefenceSaves = Helpers.CreateBlueprint<BlueprintFeature>("RMChampionFeatSavingThrow", bp =>
+                {
+                    bp.IsClassFeature = true;
+                    bp.ReapplyOnLevelUp = true;
+                    if (!Main.settings.FeatsAreMythic)
+                    {
+                        bp.Groups = new FeatureGroup[] { FeatureGroup.CombatFeat, FeatureGroup.Feat };
+                    }
+                    else
+                    {
+                        bp.Groups = new FeatureGroup[] { FeatureGroup.MythicFeat };
+                    }
+                    bp.Ranks = 1;
+                    bp.SetName("Champion Saves");
+                    bp.SetDescription("Your natural ability to avoid danger protects you from harm. You gain +2 to all saving throws per level.");
+                    bp.m_DescriptionShort = bp.m_Description;
+
+                    bp.AddComponent<AddContextStatBonus>(bonus => MakeSavingThrowBonus(bonus, StatType.SaveFortitude));
+                    bp.AddComponent<AddContextStatBonus>(bonus => MakeSavingThrowBonus(bonus, StatType.SaveReflex));
+                    bp.AddComponent<AddContextStatBonus>(bonus => MakeSavingThrowBonus(bonus, StatType.SaveWill));
+
+                    bp.AddComponent(Helpers.CreateContextRankConfig(ContextRankBaseValueType.CharacterLevel, ContextRankProgression.AsIs, AbilityRankType.Default, null, null, 1, 1));
+                });
+
                 if (!Main.settings.FeatsAreMythic)
                 {
                     FeatTools.AddAsFeat(ChampionDefenceAC);
                     FeatTools.AddAsFeat(ChampionDefenceDR);
+                    FeatTools.AddAsFeat(ChampionDefenceSaves);
                 }
                 else
                 {
                     FeatTools.AddAsMythicFeats(ChampionDefenceAC);
                     FeatTools.AddAsMythicFeats(ChampionDefenceDR);
+                    FeatTools.AddAsMythicFeats(ChampionDefenceSaves);
                 }
 
             }
+
+            private static void MakeSavingThrowBonus(AddContextStatBonus bonus, StatType statType)
+            {
+                bonus.Descriptor = ModifierDescriptor.UntypedStackable;
+                bonus.Stat = statType;
+                bonus.Multiplier = 2;
+                bonus.Value = new ContextValue()
+                {
+                    ValueType = ContextValueType.Rank,
+                    ValueRank = AbilityRankType.Default
+                };
+            }
+
             static void AddChampionOffences()
             {
                 var ChampionOffenceAB = Helpers.CreateBlueprint<BlueprintFeature>("RMChampionFeatOffenceAim", bp => {

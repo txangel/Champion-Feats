@@ -6,7 +6,7 @@
   "ManagerVersion": "0.23.0.0",
   "GameVersion": "1.0.0s",
   "Requirements": [],
-  "AssemblyName": "ChampionFeats.dll",
+  "AssemblyName": "ChampionFeatsAnew.dll",
   "HomePage": "",
   "EntryMethod": "ChampionFeats.Main.Load"
 }

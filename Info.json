@@ -1,8 +1,8 @@
 {
-  "Id": "ChampionFeats",
-  "DisplayName": "Champion Feats",
+  "Id": "ChampionFeatsAnew",
+  "DisplayName": "Champion Feats Anew",
   "Author": "RealityMachina, lynnpye",
-  "Version": "1.0.8",
+  "Version": "1.0.9",
   "ManagerVersion": "0.23.0.0",
   "GameVersion": "1.0.0s",
   "Requirements": [],

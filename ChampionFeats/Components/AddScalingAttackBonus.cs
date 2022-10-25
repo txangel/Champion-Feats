@@ -18,7 +18,7 @@ namespace ChampionFeats.Components
         // Token: 0x0600BD67 RID: 48487 RVA: 0x002F5FA0 File Offset: 0x002F41A0
         public void OnEventAboutToTrigger(RuleCalculateAttackBonusWithoutTarget evt)
         {
-            int bonus = value.Calculate(Context) * Math.Max(Bonus.Calculate(base.Context), 1);
+            int bonus = (((this.Fact.Owner.Progression.CharacterLevel - 1) / Main.settings.ScalingABLevelsPerStep) + 1) * Main.settings.ScalingABBonusPerStep;
             evt.AddModifier(bonus, Fact, Descriptor);
 
         }

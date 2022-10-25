@@ -50,6 +50,83 @@ namespace ChampionFeats
                 AddChampionMagics();
             }
 
+            private static string getStepString(int step)
+            {
+                string stepString = "";
+                switch (step)
+                {
+                    case 1:
+                        stepString = "For each";
+                        break;
+                    case 2:
+                        stepString = "At 2nd level, and every 2nd";
+                        break;
+                    case 3:
+                        stepString = "At 3rd level, and every 3rd";
+                        break;
+                    default:
+                        stepString = String.Format("At {0}th level, and every {0}th", step);
+                        break;
+                }
+                return stepString;
+            }
+
+            private static string getStepStringWOffset(int step)
+            {
+                string stepString = "";
+                switch (step)
+                {
+                    case 1:
+                        stepString = "For each";
+                        break;
+                    case 2:
+                        stepString = "At 3rd level, and every 2nd";
+                        break;
+                    case 3:
+                        stepString = "At 4th level, and every 3rd";
+                        break;
+                    default:
+                        stepString = String.Format("At {0}th level, and every {1}th", step, step - 1);
+                        break;
+                }
+                return stepString;
+            }
+
+            private static ContextRankConfig.CustomProgressionItem[] makeCustomProgression(int levelsPerStep, int bonusPerStep, int levelStepOffset = 0)
+            {
+                // levelsPerStep must be within [1,40]
+                if (levelsPerStep < 1)
+                {
+                    levelsPerStep = 1;
+                }
+                if (levelsPerStep > 40)
+                {
+                    levelsPerStep = 40;
+                }
+                // max level 40
+                int steps = 40 / levelsPerStep + 1;
+
+                ContextRankConfig.CustomProgressionItem[] items = new ContextRankConfig.CustomProgressionItem[steps];
+                int bonus = bonusPerStep;
+                int level = levelsPerStep - 1 + levelStepOffset;
+
+                for (int step = 0; step < steps; step++)
+                {
+                    items[step] = new ContextRankConfig.CustomProgressionItem()
+                    {
+                        ProgressionValue = bonus,
+                        BaseValue = level
+                    };
+
+                    bonus += bonusPerStep;
+                    level += levelsPerStep;
+                }
+
+                items[steps - 1].BaseValue = 99;
+
+                return items;
+            }
+
             static void AddChampionDefences()
             {
                 var ChampionDefenceAC = Helpers.CreateBlueprint<BlueprintFeature>("RMChampionFeatDefenceAC", bp => {
@@ -65,12 +142,15 @@ namespace ChampionFeats
                     }
                     bp.Ranks = 1;
                     bp.SetName("Champion Protection");
-                    bp.SetDescription("Whether it's from practice or tutoring, your ability to defend yourself in armor surpasses most. You gain +1/+2/+3 AC while wearing light/medium/heavy armor. At every fifth character level beyond that, this bonus doubles.");
+                    string stepString = getStepString(Main.settings.ScalingACLevelsPerStep);
+                    bp.SetDescription(String.Format("Whether it's from practice or tutoring, your ability to defend yourself in armor surpasses most. You gain +{0}/+{1}/+{2} AC while wearing light/medium/heavy armor. {3} level beyond that, this bonus increases by the same increment.",
+                        Main.settings.ScalingACArmorBonusLightPerStep, Main.settings.ScalingACArmorBonusMediumPerStep, Main.settings.ScalingACArmorBonusHeavyPerStep, stepString));
                     bp.m_DescriptionShort = bp.m_Description;
                     bp.AddComponent(Helpers.Create<AddACFromArmor>(c => {
-                        c.LightBonus = 1;
-                        c.MediumBonus = 2;
-                        c.HeavyBonus = 3;
+                        c.LightBonus = Main.settings.ScalingACArmorBonusLightPerStep;
+                        c.MediumBonus = Main.settings.ScalingACArmorBonusMediumPerStep;
+                        c.HeavyBonus = Main.settings.ScalingACArmorBonusHeavyPerStep;
+                        c.StepLevel = Main.settings.ScalingACLevelsPerStep;
                     }));
 
 
@@ -90,7 +170,9 @@ namespace ChampionFeats
                     }
                     bp.Ranks = 1;
                     bp.SetName("Champion Guard");
-                    bp.SetDescription("You stand firm and resist whatever physical harm comes for you, no matter what it is. You gain +5 DR/-, and every 5th level increases it by +5.");
+                    string stepString = getStepString(Main.settings.ScalingDRLevelsPerStep);
+                    bp.SetDescription(String.Format("You stand firm and resist whatever physical harm comes for you, no matter what it is. You gain +{0} DR/-. {1} level beyond that, increases it by +{0}.",
+                        Main.settings.ScalingDRBonusPerStep, stepString));
                     bp.m_DescriptionShort = bp.m_Description;
                     bp.AddComponent(Helpers.Create<AddDamageResistancePhysical>(c => {
 
@@ -104,7 +186,8 @@ namespace ChampionFeats
                         c.Value = new ContextValue()
                         {
                             ValueType = ContextValueType.Rank,
-                            Value = 5
+                            // not sure about this
+                            Value = Main.settings.ScalingDRBonusPerStep
                             
                         };
 
@@ -119,8 +202,11 @@ namespace ChampionFeats
                 });
 
                 var RankConfig = Helpers.CreateContextRankConfig(ContextRankBaseValueType.CharacterLevel, ContextRankProgression.Custom, AbilityRankType.Default);
+
+                var customProg = makeCustomProgression(Main.settings.ScalingDRLevelsPerStep, Main.settings.ScalingDRBonusPerStep);
               
-                var customProg = new ContextRankConfig.CustomProgressionItem[]
+                /*
+                var customProgx = new ContextRankConfig.CustomProgressionItem[]
                 {
                     // LESS THAN
                     // IT WORKS VIA LESS THAN OR EQUAL HERE
@@ -161,6 +247,8 @@ namespace ChampionFeats
                            BaseValue = 99
                        }
                 };
+                */
+                
                 RankConfig.m_CustomProgression = customProg;
                 ChampionDefenceDR.AddComponent(RankConfig);
 
@@ -178,7 +266,7 @@ namespace ChampionFeats
                     }
                     bp.Ranks = 1;
                     bp.SetName("Champion Saves");
-                    bp.SetDescription("Your natural ability to avoid danger protects you from harm. You gain +2 to all saving throws per level.");
+                    bp.SetDescription(string.Format("Your natural ability to avoid danger protects you from harm. You gain +{0} to all saving throws per level.", Main.settings.ScalingSaveBonusPerLevel));
                     bp.m_DescriptionShort = bp.m_Description;
 
                     bp.AddComponent<AddContextStatBonus>(bonus => MakeSavingThrowBonus(bonus, StatType.SaveFortitude));
@@ -207,7 +295,7 @@ namespace ChampionFeats
             {
                 bonus.Descriptor = ModifierDescriptor.UntypedStackable;
                 bonus.Stat = statType;
-                bonus.Multiplier = 2;
+                bonus.Multiplier = Main.settings.ScalingSaveBonusPerLevel;
                 bonus.Value = new ContextValue()
                 {
                     ValueType = ContextValueType.Rank,
@@ -230,7 +318,9 @@ namespace ChampionFeats
                     }
                     bp.Ranks = 1;
                     bp.SetName("Champion Aim");
-                    bp.SetDescription("Whether it's from practice or tutoring, your ability to hit targets surpasses most. You gain +1 attack bonus, and that bonus increases every two levels starting at level 3.");
+                    String stepString = getStepStringWOffset(Main.settings.ScalingABLevelsPerStep);
+                    bp.SetDescription(String.Format("Whether it's from practice or tutoring, your ability to hit targets surpasses most. You gain +{0} attack bonus. {1} level beyond that, increases it by +{0}.",
+                        Main.settings.ScalingABBonusPerStep, stepString));
                     bp.m_DescriptionShort = bp.m_Description;
                     bp.AddComponent(Helpers.Create<AddScalingAttackBonus>(c => {
                         c.value = new ContextValue()
@@ -248,6 +338,7 @@ namespace ChampionFeats
 
                 });
 
+                /*
                 var RankConfig = Helpers.CreateContextRankConfig(ContextRankBaseValueType.CharacterLevel, ContextRankProgression.Custom, AbilityRankType.Default);
                 var customProg = new ContextRankConfig.CustomProgressionItem[]
                 {
@@ -334,6 +425,9 @@ namespace ChampionFeats
                 };
                 RankConfig.m_CustomProgression = customProg;
                 ChampionOffenceAB.AddComponent(RankConfig);
+                */
+
+
                 var ChampionOffenceDam = Helpers.CreateBlueprint<BlueprintFeature>("RMChampionFeatOffenceDam", bp => {
                     bp.IsClassFeature = true;
                     bp.ReapplyOnLevelUp = true;
@@ -348,19 +442,21 @@ namespace ChampionFeats
                     }
                     bp.Ranks = 1;
                     bp.SetName("Champion Strikes");
-                    bp.SetDescription("Your weapon attacks strike hard, no matter how tough the foe. You gain +1 damage to attacks, with an extra +1 every second level starting at level 3.");
+                    String stepString = getStepStringWOffset(Main.settings.ScalingDamageLevelsPerStep);
+                    bp.SetDescription(String.Format("Your weapon attacks strike hard, no matter how tough the foe. You gain +{0} damage to attacks. {1} level beyond that, increases it by +{0}.",
+                        Main.settings.ScalingDamageBonusPerStep, stepString));
                     bp.m_DescriptionShort = bp.m_Description;
                     bp.AddComponent(Helpers.Create<AddScalingDamageBonus>(c => {
                         c.value = new ContextValue()
                         {
-                            Value = 1
+                            Value = Main.settings.ScalingDamageBonusPerStep
                         };
                         c.Bonus = new ContextValue()
                         {
                             ValueType = ContextValueType.Rank
                         };
                     }));
-                    bp.AddComponent(Helpers.CreateContextRankConfig(ContextRankBaseValueType.CharacterLevel, ContextRankProgression.StartPlusDivStep, AbilityRankType.Default, null, null, 3, 2));
+                    bp.AddComponent(Helpers.CreateContextRankConfig(ContextRankBaseValueType.CharacterLevel, ContextRankProgression.StartPlusDivStep, AbilityRankType.Default, null, null, 1 + Main.settings.ScalingDamageLevelsPerStep, Main.settings.ScalingDamageLevelsPerStep));
                 });
 
                 if (!Main.settings.FeatsAreMythic)
@@ -391,16 +487,18 @@ namespace ChampionFeats
                     }
                     bp.Ranks = 1;
                     bp.SetName("Champion Spell Blasts");
-                    bp.SetDescription("Your magical arts strike hard, no matter how tough the foe. You gain +1 damage to spell attacks per damage die, with an extra +1 every third character level starting at character level 4.");
+                    String stepString = getStepStringWOffset(Main.settings.ScalingSpellDamageLevelsPerStep);
+                    bp.SetDescription(String.Format("Your magical arts strike hard, no matter how tough the foe. You gain +{0} damage to spell attacks per damage die. {1} level beyond that, increases it by +{0}.",
+                        Main.settings.ScalingSpellDamageBonusPerStep, stepString));
                     bp.m_DescriptionShort = bp.m_Description;
                     bp.AddComponent(Helpers.Create<AddScalingSpellDamage>(c => {
                         c.Value = new ContextValue()
                         {
-                            Value = 1,
+                            Value = Main.settings.ScalingSpellDamageBonusPerStep,
                             ValueType = ContextValueType.Rank
                         };
                     }));
-                    bp.AddComponent(Helpers.CreateContextRankConfig(ContextRankBaseValueType.CharacterLevel, ContextRankProgression.StartPlusDivStep, AbilityRankType.Default, null, null, 4, 3));
+                    bp.AddComponent(Helpers.CreateContextRankConfig(ContextRankBaseValueType.CharacterLevel, ContextRankProgression.StartPlusDivStep, AbilityRankType.Default, null, null, 1 + Main.settings.ScalingSpellDamageLevelsPerStep, Main.settings.ScalingSpellDamageLevelsPerStep));
                     bp.AddComponent(Helpers.Create<RecommendationRequiresSpellbook>());
                     bp.AddComponent(Helpers.Create<FeatureTagsComponent>(c => {
                         c.FeatureTags = FeatureTag.Magic;
@@ -420,7 +518,9 @@ namespace ChampionFeats
                     }
                     bp.Ranks = 1;
                     bp.SetName("Champion Spell Force");
-                    bp.SetDescription("Your magical arts are overwhelming for enemies to deal with. You gain +1 to the DC of your spells, with an extra +1 for every character level.");
+                    String stepString = getStepStringWOffset(Main.settings.ScalingSpellDCLevelsPerStep);
+                    bp.SetDescription(String.Format("Your magical arts are overwhelming for enemies to deal with. You gain +{0} to the DC of your spells. {1} level beyond that, increases it by +{0}.",
+                        Main.settings.ScalingSpellDCBonusPerStep, stepString));
                     bp.m_DescriptionShort = bp.m_Description;
                     bp.AddComponent(Helpers.Create<AddScalingSpellDC>(c => {
                         c.Value = new ContextValue()
@@ -449,7 +549,8 @@ namespace ChampionFeats
                     }
                     bp.Ranks = 1;
                     bp.SetName("Champion Spell Penetration");
-                    bp.SetDescription("Your magical arts are trained to pierce even the thickest of protections. Half your character level (or +1 at the lowest) is added as bonus spell penetration. If you have Spell Penetration, it's full character level instead.");
+                    bp.SetDescription(String.Format("Your magical arts are trained to pierce even the thickest of protections. Half of +{0} per character level (minimum of +1) is added as bonus spell penetration. If you have Spell Penetration, it's +{0} per character level instead.",
+                        Main.settings.ScalingSpellPenBonusPerLevel));
                     bp.m_DescriptionShort = bp.m_Description;
                     bp.AddComponent(Helpers.Create<AddScalingSpellPenetration>(c => {
                         c.Value = new ContextValue()

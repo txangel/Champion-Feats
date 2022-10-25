@@ -31,7 +31,7 @@ namespace ChampionFeats.Components
         }
         public void OnEventAboutToTrigger(RuleSpellResistanceCheck evt)
         {
-            int bonus = Value.Calculate(Context);
+            int bonus = this.Fact.Owner.Progression.CharacterLevel * Main.settings.ScalingSpellPenBonusPerLevel;
             //it's caster level / 2 for without spell penetration, caster level if it does. This is a weird case where I don't mind paying a feat tax if I want to completely eliminate spell resistance
             // I just want to make it more easy in my favour without needing to take 3 feats for it effectively
             evt.AddSpellPenetration(evt.Initiator.HasFact(spellPen) ? bonus : Math.Max(1, bonus / 2), ModifierDescriptor.UntypedStackable);

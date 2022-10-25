@@ -115,6 +115,10 @@
       <HintPath>$([System.IO.Path]::Combine($(WrathInstallDir), 'Wrath_Data\Managed\UnityModManager\UnityModManager.dll'))</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>$([System.IO.Path]::Combine($(WrathInstallDir), 'Wrath_Data\Managed\Unity.TextMeshPro.dll'))</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Owlcat.Runtime.Validation">
       <HintPath>$([System.IO.Path]::Combine($(WrathInstallDir), 'Wrath_Data\Managed\Owlcat.Runtime.Validation.dll'))</HintPath>
       <Private>False</Private>

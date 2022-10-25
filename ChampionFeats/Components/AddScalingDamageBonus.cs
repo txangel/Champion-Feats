@@ -18,9 +18,7 @@ namespace ChampionFeats.Components
         // Token: 0x0600A58A RID: 42378 RVA: 0x0029FB50 File Offset: 0x0029DD50
         public void OnEventAboutToTrigger(RuleCalculateWeaponStats evt)
         {
-            int totalBonus;
-
-            totalBonus = value.Calculate(Context) + Math.Max(Bonus.Calculate(Context), 1);
+            int totalBonus = (((this.Fact.Owner.Progression.CharacterLevel - 1) / Main.settings.ScalingDamageLevelsPerStep) + 1) * Main.settings.ScalingDamageBonusPerStep;
 
             evt.AddDamageModifier(totalBonus, Fact, ModifierDescriptor.UntypedStackable);
         }

@@ -19,7 +19,7 @@ namespace ChampionFeats.Components
     {
         public void OnEventAboutToTrigger(RuleSavingThrow evt)
         {
-            int bonus = 2;
+            int bonus = Main.settings.ScalingSaveBonusPerLevel;
             evt.AddModifier(bonus, Fact, ModifierDescriptor.UntypedStackable);
         }
 

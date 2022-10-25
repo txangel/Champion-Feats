@@ -87,7 +87,7 @@ namespace ChampionFeats.Components
                     break;
             }
 
-            itemBonus *= Math.Max(1 + (Fact.Owner.Progression.CharacterLevel / 5), 1);
+            itemBonus *= StepLevel == 1 ? Fact.Owner.Progression.CharacterLevel : Math.Max(1 + (Fact.Owner.Progression.CharacterLevel / StepLevel), 1);
 
             return itemBonus;
         }
@@ -105,6 +105,6 @@ namespace ChampionFeats.Components
         public int LightBonus;
         public int MediumBonus;
         public int HeavyBonus;
-        public int StepLevel = 5;
+        public int StepLevel;
     }
 }

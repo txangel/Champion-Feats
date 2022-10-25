@@ -34,7 +34,7 @@ namespace ChampionFeats.Components
 
             //we're here, so we know we're a spell. 
 
-            int bonus = Value.Calculate(Context);
+            int bonus = (((this.Fact.Owner.Progression.CharacterLevel - 1) / Main.settings.ScalingSpellDCLevelsPerStep) + 1) * Main.settings.ScalingSpellDCBonusPerStep;
             evt.AddBonusDC(Math.Max(1, bonus), ModifierDescriptor.UntypedStackable);
 
         }

@@ -37,7 +37,8 @@ namespace ChampionFeats.Components
                     continue;
                 }
                 Main.Log("Number of dice rolls is " + baseDamage.Dice.BaseFormula.m_Rolls);
-                int bonus = Value.Calculate(Context) * baseDamage.Dice.BaseFormula.m_Rolls;
+                int calcBonus = (((this.Fact.Owner.Progression.CharacterLevel - 1) / Main.settings.ScalingSpellDamageLevelsPerStep) + 1) * Main.settings.ScalingSpellDamageBonusPerStep;
+                int bonus = calcBonus * baseDamage.Dice.BaseFormula.m_Rolls;
                 baseDamage.AddModifier(Math.Max(1, bonus), Fact);
             }
         }

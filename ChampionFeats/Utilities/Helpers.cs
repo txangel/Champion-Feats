@@ -23,9 +23,14 @@ using System.Reflection;
 using ChampionFeats.Config;
 using ChampionFeats;
 using static Kingmaker.Localization.LocalizationPack;
+using ChampionFeats.Extensions;
 
 namespace ChampionFeats.Utilities {
     public static class Helpers {
+        public static void AppendInPlace<T>(ref T[] arr, params T[] newValue) {
+            arr = arr.AppendToArray(newValue);
+        }
+
         public static T Create<T>(Action<T> init = null) where T : new() {
             var result = new T();
             init?.Invoke(result);

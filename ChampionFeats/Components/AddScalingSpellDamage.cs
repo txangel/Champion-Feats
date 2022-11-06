@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using ChampionFeats.Config;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Facts;
 using Kingmaker.Blueprints.JsonSystem;
@@ -17,6 +18,8 @@ namespace ChampionFeats.Components
     [TypeId("34f01b4e062075c408523fbf92871dc5")]
     class AddScalingSpellDamage : UnitBuffComponentDelegate, IInitiatorRulebookHandler<RuleCalculateDamage>, IRulebookHandler<RuleCalculateDamage>, ISubscriber, IInitiatorRulebookSubscriber
     {
+        public const string BLUEPRINTNAME = "RMChampionFeatOffenceSpellDam";
+
         public void OnEventAboutToTrigger(RuleCalculateDamage evt)
         {
             if (evt.Reason.Ability == null)
@@ -27,16 +30,17 @@ namespace ChampionFeats.Components
             {
                 return;
             }
+            if (Blueprints.HasNPCImmortalityBuff(Fact.Owner))
+            {
+                return;
+            }
 
             foreach (BaseDamage baseDamage in evt.DamageBundle)
             {
-                Main.Log("Context bonus is " + Value.Calculate(Context));
-               
                 if(baseDamage.Dice.BaseFormula.Dice == Kingmaker.RuleSystem.DiceType.Zero) // trying to account for getting spells that shouldn't be damaging, apparently?
                 {
                     continue;
                 }
-                Main.Log("Number of dice rolls is " + baseDamage.Dice.BaseFormula.m_Rolls);
                 int calcBonus = (((this.Fact.Owner.Progression.CharacterLevel - 1) / Main.settings.ScalingSpellDamageLevelsPerStep) + 1) * Main.settings.ScalingSpellDamageBonusPerStep;
                 int bonus = calcBonus * baseDamage.Dice.BaseFormula.m_Rolls;
                 baseDamage.AddModifier(Math.Max(1, bonus), Fact);
@@ -46,7 +50,5 @@ namespace ChampionFeats.Components
         public void OnEventDidTrigger(RuleCalculateDamage evt)
         {
         }
-
-        public ContextValue Value;
     }
 }

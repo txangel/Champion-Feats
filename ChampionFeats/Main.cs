@@ -12,6 +12,7 @@ using UnityEngine;
 using UnityModManagerNet;
 using Kingmaker.Localization;
 using System.IO;
+using ChampionFeats.Components;
 //using static UnityModManagerNet.UnityModManager;
 namespace ChampionFeats
 {
@@ -41,6 +42,7 @@ namespace ChampionFeats
         private static void OnSaveGUI(UnityModManager.ModEntry modEntry)
         {
             settings.Save(modEntry);
+            AddScalingSavingThrows.OnSettingsSave();
         }
 
         private static void vert10()
@@ -127,6 +129,16 @@ namespace ChampionFeats
         private static bool iAmEnabled;
 
         public static Settings settings;
+
+        public static void Log2File(string msg)
+        {
+            /*
+            StreamWriter streamWriter = File.AppendText("C:\\temp\\log.txt");
+            streamWriter.WriteLine(msg);
+            streamWriter.Flush();
+            streamWriter.Close();
+            */
+        }
 
         public static void Log(string msg)
         {

@@ -92,7 +92,7 @@ namespace ChampionFeats
                 return stepString;
             }
 
-            private static ContextRankConfig.CustomProgressionItem[] makeCustomProgression(int levelsPerStep, int bonusPerStep, int levelStepOffset = 0)
+            public static ContextRankConfig.CustomProgressionItem[] makeCustomProgression(int levelsPerStep, int bonusPerStep, int levelStepOffset = 0)
             {
                 // levelsPerStep must be within [1,40]
                 if (levelsPerStep < 1)
@@ -108,7 +108,7 @@ namespace ChampionFeats
 
                 ContextRankConfig.CustomProgressionItem[] items = new ContextRankConfig.CustomProgressionItem[steps];
                 int bonus = bonusPerStep;
-                int level = levelsPerStep - 1 + levelStepOffset;
+                int level = levelsPerStep + levelStepOffset;
 
                 for (int step = 0; step < steps; step++)
                 {
@@ -129,7 +129,7 @@ namespace ChampionFeats
 
             static void AddChampionDefences()
             {
-                var ChampionDefenceAC = Helpers.CreateBlueprint<BlueprintFeature>("RMChampionFeatDefenceAC", bp => {
+                var ChampionDefenceAC = Helpers.CreateBlueprint<BlueprintFeature>(AddACFromArmor.BLUEPRINTNAME, bp => {
                     bp.IsClassFeature = true;
                     bp.ReapplyOnLevelUp = true;
                     if (!Main.settings.FeatsAreMythic)
@@ -157,7 +157,7 @@ namespace ChampionFeats
                 });
 
 
-                var ChampionDefenceDR = Helpers.CreateBlueprint<BlueprintFeature>("RMChampionFeatDefenceDR", bp => {
+                var ChampionDefenceDR = Helpers.CreateBlueprint<BlueprintFeature>(AddScalingDamageResistance.BLUEPRINTNAME, bp => {
                     bp.IsClassFeature = true;
                     bp.ReapplyOnLevelUp = true;
                     if (!Main.settings.FeatsAreMythic)
@@ -174,85 +174,25 @@ namespace ChampionFeats
                     bp.SetDescription(String.Format("You stand firm and resist whatever physical harm comes for you, no matter what it is. You gain +{0} DR/-. {1} level beyond that, increases it by +{0}.",
                         Main.settings.ScalingDRBonusPerStep, stepString));
                     bp.m_DescriptionShort = bp.m_Description;
-                    bp.AddComponent(Helpers.Create<AddDamageResistancePhysical>(c => {
 
-
+                    bp.AddComponent(Helpers.Create<AddDamageResistancePhysical>(c =>
+                    {
                         c.name = "RMChampionGuardBuff";
-                        c.Material = PhysicalDamageMaterial.Adamantite;
                         c.MinEnhancementBonus = 5;
-                        
-                        c.Alignment = DamageAlignment.Good;
-                        c.Reality = DamageRealityType.Ghost;
-                        c.Value = new ContextValue()
+                        // I apologize for the brute force
+                        c.Value = new ContextValueDR()
                         {
-                            ValueType = ContextValueType.Rank,
+                            ValueType = ContextValueType.Simple,
                             // not sure about this
-                            Value = Main.settings.ScalingDRBonusPerStep
-                            
+                            //Value = Main.settings.ScalingDRBonusPerStep
+                            Value = 1
                         };
-
-
-                        c.Pool = new ContextValue()
-                        {
-                            Value = 12
-                        };
-
                     }));
- 
+
                 });
 
-                var RankConfig = Helpers.CreateContextRankConfig(ContextRankBaseValueType.CharacterLevel, ContextRankProgression.Custom, AbilityRankType.Default);
 
-                var customProg = makeCustomProgression(Main.settings.ScalingDRLevelsPerStep, Main.settings.ScalingDRBonusPerStep);
-              
-                /*
-                var customProgx = new ContextRankConfig.CustomProgressionItem[]
-                {
-                    // LESS THAN
-                    // IT WORKS VIA LESS THAN OR EQUAL HERE
-                     new ContextRankConfig.CustomProgressionItem{
-                           ProgressionValue = 5,
-                           BaseValue = 4
-                       },
-                       new ContextRankConfig.CustomProgressionItem{
-                           ProgressionValue = 10,
-                           BaseValue = 9
-                       },
-                       new ContextRankConfig.CustomProgressionItem{
-                           ProgressionValue = 15,
-                           BaseValue = 14
-                       },
-                       new ContextRankConfig.CustomProgressionItem{
-                           ProgressionValue = 20,
-                           BaseValue = 19
-                       },
-                       new ContextRankConfig.CustomProgressionItem{
-                           ProgressionValue = 25,
-                           BaseValue = 24
-                       },
-                       new ContextRankConfig.CustomProgressionItem{
-                           ProgressionValue = 30,
-                           BaseValue = 29
-                       },
-                       new ContextRankConfig.CustomProgressionItem{
-                           ProgressionValue = 35,
-                           BaseValue = 34
-                       },
-                       new ContextRankConfig.CustomProgressionItem{
-                           ProgressionValue = 40,
-                           BaseValue = 39
-                       },
-                       new ContextRankConfig.CustomProgressionItem{
-                           ProgressionValue = 45,
-                           BaseValue = 99
-                       }
-                };
-                */
-                
-                RankConfig.m_CustomProgression = customProg;
-                ChampionDefenceDR.AddComponent(RankConfig);
-
-                var ChampionDefenceSaves = Helpers.CreateBlueprint<BlueprintFeature>("RMChampionFeatSavingThrow", bp =>
+                var ChampionDefenceSaves = Helpers.CreateBlueprint<BlueprintFeature>(AddScalingSavingThrows.BLUEPRINTNAME, bp =>
                 {
                     bp.IsClassFeature = true;
                     bp.ReapplyOnLevelUp = true;
@@ -269,11 +209,7 @@ namespace ChampionFeats
                     bp.SetDescription(string.Format("Your natural ability to avoid danger protects you from harm. You gain +{0} to all saving throws per level.", Main.settings.ScalingSaveBonusPerLevel));
                     bp.m_DescriptionShort = bp.m_Description;
 
-                    bp.AddComponent<AddContextStatBonus>(bonus => MakeSavingThrowBonus(bonus, StatType.SaveFortitude));
-                    bp.AddComponent<AddContextStatBonus>(bonus => MakeSavingThrowBonus(bonus, StatType.SaveReflex));
-                    bp.AddComponent<AddContextStatBonus>(bonus => MakeSavingThrowBonus(bonus, StatType.SaveWill));
-
-                    bp.AddComponent(Helpers.CreateContextRankConfig(ContextRankBaseValueType.CharacterLevel, ContextRankProgression.AsIs, AbilityRankType.Default, null, null, 1, 1));
+                    bp.AddComponent(Helpers.Create<AddScalingSavingThrows>());
                 });
 
                 if (!Main.settings.FeatsAreMythic)
@@ -291,21 +227,9 @@ namespace ChampionFeats
 
             }
 
-            private static void MakeSavingThrowBonus(AddContextStatBonus bonus, StatType statType)
-            {
-                bonus.Descriptor = ModifierDescriptor.UntypedStackable;
-                bonus.Stat = statType;
-                bonus.Multiplier = Main.settings.ScalingSaveBonusPerLevel;
-                bonus.Value = new ContextValue()
-                {
-                    ValueType = ContextValueType.Rank,
-                    ValueRank = AbilityRankType.Default
-                };
-            }
-
             static void AddChampionOffences()
             {
-                var ChampionOffenceAB = Helpers.CreateBlueprint<BlueprintFeature>("RMChampionFeatOffenceAim", bp => {
+                var ChampionOffenceAB = Helpers.CreateBlueprint<BlueprintFeature>(AddScalingAttackBonus.BLUEPRINTNAME, bp => {
                     bp.IsClassFeature = true;
                     bp.ReapplyOnLevelUp = true;
                     if (!Main.settings.FeatsAreMythic)
@@ -322,113 +246,12 @@ namespace ChampionFeats
                     bp.SetDescription(String.Format("Whether it's from practice or tutoring, your ability to hit targets surpasses most. You gain +{0} attack bonus. {1} level beyond that, increases it by +{0}.",
                         Main.settings.ScalingABBonusPerStep, stepString));
                     bp.m_DescriptionShort = bp.m_Description;
-                    bp.AddComponent(Helpers.Create<AddScalingAttackBonus>(c => {
-                        c.value = new ContextValue()
-                        {
-                            Value = 1
-                        };
-                        c.Bonus = new ContextValue()
-                        {
-                            ValueType = ContextValueType.Rank
-                        };
-                        c.Descriptor = ModifierDescriptor.UntypedStackable;
-                        
-                  //      bp.AddComponent(Helpers.CreateContextRankConfig(ContextRankBaseValueType.CharacterLevel, ContextRankProgression.StartPlusDivStep, AbilityRankType.Default, null, null, 2, 2));
-                    }));
+                    bp.AddComponent(Helpers.Create<AddScalingAttackBonus>(c => {}));
 
                 });
 
-                /*
-                var RankConfig = Helpers.CreateContextRankConfig(ContextRankBaseValueType.CharacterLevel, ContextRankProgression.Custom, AbilityRankType.Default);
-                var customProg = new ContextRankConfig.CustomProgressionItem[]
-                {
-                     new ContextRankConfig.CustomProgressionItem{
-                           ProgressionValue = 1,
-                           BaseValue = 2
-                       },
-                       new ContextRankConfig.CustomProgressionItem{
-                           ProgressionValue = 2,
-                           BaseValue = 4
-                       },
-                       new ContextRankConfig.CustomProgressionItem{
-                           ProgressionValue = 3,
-                           BaseValue = 6
-                       },
-                       new ContextRankConfig.CustomProgressionItem{
-                           ProgressionValue = 4,
-                           BaseValue = 8
-                       },
-                       new ContextRankConfig.CustomProgressionItem{
-                           ProgressionValue = 5,
-                           BaseValue = 10
-                       },
-                       new ContextRankConfig.CustomProgressionItem{
-                           ProgressionValue = 7,
-                           BaseValue = 12
-                       },
-                       new ContextRankConfig.CustomProgressionItem{
-                           ProgressionValue = 8,
-                           BaseValue = 14
-                       },
-                       new ContextRankConfig.CustomProgressionItem{
-                           ProgressionValue = 9,
-                           BaseValue = 16
-                       },
-                       new ContextRankConfig.CustomProgressionItem{
-                           ProgressionValue = 10,
-                           BaseValue = 18
-                       },
-                       new ContextRankConfig.CustomProgressionItem{
-                           ProgressionValue = 11,
-                           BaseValue = 20
-                       },
-                       new ContextRankConfig.CustomProgressionItem{
-                           ProgressionValue = 12,
-                           BaseValue = 22
-                       },
-                       new ContextRankConfig.CustomProgressionItem{
-                           ProgressionValue = 13,
-                           BaseValue = 24
-                       },
-                       new ContextRankConfig.CustomProgressionItem{
-                           ProgressionValue = 14,
-                           BaseValue = 26
-                       },
-                       new ContextRankConfig.CustomProgressionItem{
-                           ProgressionValue = 15,
-                           BaseValue = 28
-                       },
-                       new ContextRankConfig.CustomProgressionItem{
-                           ProgressionValue = 17,
-                           BaseValue = 30
-                       },
-                       new ContextRankConfig.CustomProgressionItem{
-                           ProgressionValue = 19,
-                           BaseValue = 32
-                       },
-                       new ContextRankConfig.CustomProgressionItem{
-                           ProgressionValue = 21,
-                           BaseValue = 34
-                       },
-                       new ContextRankConfig.CustomProgressionItem{
-                           ProgressionValue = 22,
-                           BaseValue = 36
-                       },
-                       new ContextRankConfig.CustomProgressionItem{
-                           ProgressionValue = 23,
-                           BaseValue = 38
-                       },
-                       new ContextRankConfig.CustomProgressionItem{
-                           ProgressionValue = 24,
-                           BaseValue = 99
-                       }
-                };
-                RankConfig.m_CustomProgression = customProg;
-                ChampionOffenceAB.AddComponent(RankConfig);
-                */
 
-
-                var ChampionOffenceDam = Helpers.CreateBlueprint<BlueprintFeature>("RMChampionFeatOffenceDam", bp => {
+                var ChampionOffenceDam = Helpers.CreateBlueprint<BlueprintFeature>(AddScalingDamageBonus.BLUEPRINTNAME, bp => {
                     bp.IsClassFeature = true;
                     bp.ReapplyOnLevelUp = true;
                     if (!Main.settings.FeatsAreMythic)
@@ -446,17 +269,7 @@ namespace ChampionFeats
                     bp.SetDescription(String.Format("Your weapon attacks strike hard, no matter how tough the foe. You gain +{0} damage to attacks. {1} level beyond that, increases it by +{0}.",
                         Main.settings.ScalingDamageBonusPerStep, stepString));
                     bp.m_DescriptionShort = bp.m_Description;
-                    bp.AddComponent(Helpers.Create<AddScalingDamageBonus>(c => {
-                        c.value = new ContextValue()
-                        {
-                            Value = Main.settings.ScalingDamageBonusPerStep
-                        };
-                        c.Bonus = new ContextValue()
-                        {
-                            ValueType = ContextValueType.Rank
-                        };
-                    }));
-                    bp.AddComponent(Helpers.CreateContextRankConfig(ContextRankBaseValueType.CharacterLevel, ContextRankProgression.StartPlusDivStep, AbilityRankType.Default, null, null, 1 + Main.settings.ScalingDamageLevelsPerStep, Main.settings.ScalingDamageLevelsPerStep));
+                    bp.AddComponent(Helpers.Create<AddScalingDamageBonus>(c => {}));
                 });
 
                 if (!Main.settings.FeatsAreMythic)
@@ -474,7 +287,7 @@ namespace ChampionFeats
             {
                 var SpellPen = Resources.GetBlueprint<BlueprintFeature>("ee7dc126939e4d9438357fbd5980d459");
 
-                var ChampionOffenceSpellDam = Helpers.CreateBlueprint<BlueprintFeature>("RMChampionFeatOffenceSpellDam", bp => {
+                var ChampionOffenceSpellDam = Helpers.CreateBlueprint<BlueprintFeature>(AddScalingSpellDamage.BLUEPRINTNAME, bp => {
                     bp.IsClassFeature = true;
                     bp.ReapplyOnLevelUp = true;
                     if (!Main.settings.FeatsAreMythic)
@@ -491,21 +304,14 @@ namespace ChampionFeats
                     bp.SetDescription(String.Format("Your magical arts strike hard, no matter how tough the foe. You gain +{0} damage to spell attacks per damage die. {1} level beyond that, increases it by +{0}.",
                         Main.settings.ScalingSpellDamageBonusPerStep, stepString));
                     bp.m_DescriptionShort = bp.m_Description;
-                    bp.AddComponent(Helpers.Create<AddScalingSpellDamage>(c => {
-                        c.Value = new ContextValue()
-                        {
-                            Value = Main.settings.ScalingSpellDamageBonusPerStep,
-                            ValueType = ContextValueType.Rank
-                        };
-                    }));
-                    bp.AddComponent(Helpers.CreateContextRankConfig(ContextRankBaseValueType.CharacterLevel, ContextRankProgression.StartPlusDivStep, AbilityRankType.Default, null, null, 1 + Main.settings.ScalingSpellDamageLevelsPerStep, Main.settings.ScalingSpellDamageLevelsPerStep));
+                    bp.AddComponent(Helpers.Create<AddScalingSpellDamage>(c => {}));
                     bp.AddComponent(Helpers.Create<RecommendationRequiresSpellbook>());
                     bp.AddComponent(Helpers.Create<FeatureTagsComponent>(c => {
                         c.FeatureTags = FeatureTag.Magic;
                     }));
                 });
 
-                var ChampionOffenceSpellDC = Helpers.CreateBlueprint<BlueprintFeature>("RMChampionFeatOffenceSpellDC", bp => {
+                var ChampionOffenceSpellDC = Helpers.CreateBlueprint<BlueprintFeature>(AddScalingSpellDC.BLUEPRINTNAME, bp => {
                     bp.IsClassFeature = true;
                     bp.ReapplyOnLevelUp = true;
                     if (!Main.settings.FeatsAreMythic)
@@ -522,21 +328,14 @@ namespace ChampionFeats
                     bp.SetDescription(String.Format("Your magical arts are overwhelming for enemies to deal with. You gain +{0} to the DC of your spells. {1} level beyond that, increases it by +{0}.",
                         Main.settings.ScalingSpellDCBonusPerStep, stepString));
                     bp.m_DescriptionShort = bp.m_Description;
-                    bp.AddComponent(Helpers.Create<AddScalingSpellDC>(c => {
-                        c.Value = new ContextValue()
-                        {
-                            Value = 1,
-                            ValueType = ContextValueType.Rank
-                        };
-                    }));
-                    bp.AddComponent(Helpers.CreateContextRankConfig(ContextRankBaseValueType.CharacterLevel, ContextRankProgression.AsIs, AbilityRankType.Default));
+                    bp.AddComponent(Helpers.Create<AddScalingSpellDC>(c => {}));
                     bp.AddComponent(Helpers.Create<RecommendationRequiresSpellbook>());
                     bp.AddComponent(Helpers.Create<FeatureTagsComponent>(c => {
                         c.FeatureTags = FeatureTag.Magic;
                     }));
                 });
 
-                var ChampionOffenceSpellPen = Helpers.CreateBlueprint<BlueprintFeature>("RMChampionFeatOffenceSpellPen", bp => {
+                var ChampionOffenceSpellPen = Helpers.CreateBlueprint<BlueprintFeature>(AddScalingSpellPenetration.BLUEPRINTNAME, bp => {
                     bp.IsClassFeature = true;
                     bp.ReapplyOnLevelUp = true;
                     if (!Main.settings.FeatsAreMythic)
@@ -553,14 +352,8 @@ namespace ChampionFeats
                         Main.settings.ScalingSpellPenBonusPerLevel));
                     bp.m_DescriptionShort = bp.m_Description;
                     bp.AddComponent(Helpers.Create<AddScalingSpellPenetration>(c => {
-                        c.Value = new ContextValue()
-                        {
-                            Value = 1,
-                            ValueType = ContextValueType.Rank
-                        };
                         c.m_SpellPen = SpellPen.ToReference<BlueprintUnitFactReference>();
                     }));
-                    bp.AddComponent(Helpers.CreateContextRankConfig(ContextRankBaseValueType.CharacterLevel, ContextRankProgression.AsIs, AbilityRankType.Default));
                     bp.AddComponent(Helpers.Create<RecommendationRequiresSpellbook>());
                     bp.AddComponent(Helpers.Create<FeatureTagsComponent>(c => {
                         c.FeatureTags = FeatureTag.Magic;

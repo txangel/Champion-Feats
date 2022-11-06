@@ -129,10 +129,12 @@
     <Compile Include="Components\AddACFromArmor.cs" />
     <Compile Include="Components\AddScalingAttackBonus.cs" />
     <Compile Include="Components\AddScalingDamageBonus.cs" />
+    <Compile Include="Components\AddScalingDamageResistance.cs" />
     <Compile Include="Components\AddScalingSavingThrows.cs" />
     <Compile Include="Components\AddScalingSpellDamage.cs" />
     <Compile Include="Components\AddScalingSpellDC.cs" />
     <Compile Include="Components\AddScalingSpellPenetration.cs" />
+    <Compile Include="Components\ContextValuePatcher.cs" />
     <Compile Include="Config\Blueprints.cs" />
     <Compile Include="Config\IUpdatableSettings.cs" />
     <Compile Include="Config\ModSettings.cs" />

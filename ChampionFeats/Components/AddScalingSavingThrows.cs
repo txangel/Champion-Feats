@@ -97,7 +97,7 @@ namespace ChampionFeats.Components
             {
                 ModDescriptor = ModifierDescriptor.UntypedStackable,
                 Source = runtime.Fact,
-                ModValue = Main.settings.ScalingSaveBonusPerLevel * unit.Progression.CharacterLevel
+                ModValue = (((unit.Progression.CharacterLevel - 1) / Main.settings.ScalingSaveLevelsPerStep) + 1) * Main.settings.ScalingSaveBonusPerLevel
             };
         }
 

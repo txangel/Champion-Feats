@@ -70,7 +70,7 @@ namespace ChampionFeats
             vert10();
             GUILayout.Label("Champion Protection (AC bonus for armor):", options);
             GUILayout.Label(String.Format("Levels Per Step: {0}", settings.ScalingACLevelsPerStep), options);
-            settings.ScalingACLevelsPerStep = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingACLevelsPerStep, 1, 5, options));
+            settings.ScalingACLevelsPerStep = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingACLevelsPerStep, 1, 10, options));
             GUILayout.Label(String.Format("Light Armor Bonus Per Step: {0}", settings.ScalingACArmorBonusLightPerStep), options);
             settings.ScalingACArmorBonusLightPerStep = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingACArmorBonusLightPerStep, 1, 10, options));
             GUILayout.Label(String.Format("Medium Armor Bonus Per Step: {0}", settings.ScalingACArmorBonusMediumPerStep), options);
@@ -81,40 +81,42 @@ namespace ChampionFeats
             vert10();
             GUILayout.Label("Champion Guard (DR):", options);
             GUILayout.Label(String.Format("Levels Per Step: {0}", settings.ScalingDRLevelsPerStep), options);
-            settings.ScalingDRLevelsPerStep = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingDRLevelsPerStep, 1, 5, options));
+            settings.ScalingDRLevelsPerStep = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingDRLevelsPerStep, 1, 10, options));
             GUILayout.Label(String.Format("DR Bonus Per Step: {0}", settings.ScalingDRBonusPerStep), options);
             settings.ScalingDRBonusPerStep = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingDRBonusPerStep, 1, 20, options));
 
             vert10();
             GUILayout.Label("Champion Saves (Saving Throws):", options);
+            GUILayout.Label(String.Format("Levels Per Step: {0}", settings.ScalingSaveLevelsPerStep), options);
+            settings.ScalingSaveLevelsPerStep = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingSaveLevelsPerStep, 1, 10, options));
             GUILayout.Label(String.Format("Bonus Per Level: {0}", settings.ScalingSaveBonusPerLevel), options);
             settings.ScalingSaveBonusPerLevel = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingSaveBonusPerLevel, 1, 10, options));
 
             vert10();
             GUILayout.Label("Champion Aim (Weapon AB):", options);
             GUILayout.Label(String.Format("Levels Per Step: {0}", settings.ScalingABLevelsPerStep), options);
-            settings.ScalingABLevelsPerStep = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingABLevelsPerStep, 1, 5, options));
+            settings.ScalingABLevelsPerStep = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingABLevelsPerStep, 1, 10, options));
             GUILayout.Label(String.Format("Bonus Per Step: {0}", settings.ScalingABBonusPerStep), options);
             settings.ScalingABBonusPerStep = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingABBonusPerStep, 1, 10, options));
 
             vert10();
             GUILayout.Label("Champion Strikes (Weapon Damage):", options);
             GUILayout.Label(String.Format("Levels Per Step: {0}", settings.ScalingDamageLevelsPerStep), options);
-            settings.ScalingDamageLevelsPerStep = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingDamageLevelsPerStep, 1, 5, options));
+            settings.ScalingDamageLevelsPerStep = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingDamageLevelsPerStep, 1, 10, options));
             GUILayout.Label(String.Format("Bonus Per Step: {0}", settings.ScalingDamageBonusPerStep), options);
             settings.ScalingDamageBonusPerStep = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingDamageBonusPerStep, 1, 10, options));
 
             vert10();
             GUILayout.Label("Champion Spell Blasts (Spell Damage):", options);
             GUILayout.Label(String.Format("Levels Per Step: {0}", settings.ScalingSpellDamageLevelsPerStep), options);
-            settings.ScalingSpellDamageLevelsPerStep = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingSpellDamageLevelsPerStep, 1, 5, options));
+            settings.ScalingSpellDamageLevelsPerStep = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingSpellDamageLevelsPerStep, 1, 10, options));
             GUILayout.Label(String.Format("Bonus Per Step: {0}", settings.ScalingSpellDamageBonusPerStep), options);
             settings.ScalingSpellDamageBonusPerStep = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingSpellDamageBonusPerStep, 1, 10, options));
 
             vert10();
             GUILayout.Label("Champion Spell Force (Spell DC):", options);
             GUILayout.Label(String.Format("Levels Per Step: {0}", settings.ScalingSpellDCLevelsPerStep), options);
-            settings.ScalingSpellDCLevelsPerStep = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingSpellDCLevelsPerStep, 1, 5, options));
+            settings.ScalingSpellDCLevelsPerStep = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingSpellDCLevelsPerStep, 1, 10, options));
             GUILayout.Label(String.Format("Bonus Per Step: {0}", settings.ScalingSpellDCBonusPerStep), options);
             settings.ScalingSpellDCBonusPerStep = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingSpellDCBonusPerStep, 1, 10, options));
 

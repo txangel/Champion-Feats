@@ -23,6 +23,7 @@ namespace ChampionFeats
         public int ScalingDRLevelsPerStep = 5;
         public int ScalingDRBonusPerStep = 5;
         // Champion Saves
+        public int ScalingSaveLevelsPerStep = 1;
         public int ScalingSaveBonusPerLevel = 2;
         // Champion Aim
         public int ScalingABLevelsPerStep = 2;

@@ -131,6 +131,7 @@
     <Compile Include="Components\AddScalingDamageBonus.cs" />
     <Compile Include="Components\AddScalingDamageResistance.cs" />
     <Compile Include="Components\AddScalingSavingThrows.cs" />
+    <Compile Include="Components\AddScalingSkillBonus.cs" />
     <Compile Include="Components\AddScalingSpellDamage.cs" />
     <Compile Include="Components\AddScalingSpellDC.cs" />
     <Compile Include="Components\AddScalingSpellPenetration.cs" />

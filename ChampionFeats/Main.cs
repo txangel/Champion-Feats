@@ -43,6 +43,7 @@ namespace ChampionFeats
         {
             settings.Save(modEntry);
             AddScalingSavingThrows.OnSettingsSave();
+            AddScalingSkillBonus.OnSettingsSave();
         }
 
         private static void vert10()
@@ -91,6 +92,13 @@ namespace ChampionFeats
             settings.ScalingSaveLevelsPerStep = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingSaveLevelsPerStep, 1, 10, options));
             GUILayout.Label(String.Format("Bonus Per Level: {0}", settings.ScalingSaveBonusPerLevel), options);
             settings.ScalingSaveBonusPerLevel = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingSaveBonusPerLevel, 1, 10, options));
+
+            vert10();
+            GUILayout.Label("Champion Skills (Skill Bonus):", options);
+            GUILayout.Label(String.Format("Levels Per Step: {0}", settings.ScalingSkillsLevelsPerStep), options);
+            settings.ScalingSkillsLevelsPerStep = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingSkillsLevelsPerStep, 1, 10, options));
+            GUILayout.Label(String.Format("Bonus Per Step: {0}", settings.ScalingSkillsBonusPerLevel), options);
+            settings.ScalingSkillsBonusPerLevel = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingSkillsBonusPerLevel, 1, 10, options));
 
             vert10();
             GUILayout.Label("Champion Aim (Weapon AB):", options);

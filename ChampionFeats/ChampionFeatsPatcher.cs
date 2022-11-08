@@ -206,7 +206,9 @@ namespace ChampionFeats
                     }
                     bp.Ranks = 1;
                     bp.SetName("Champion Saves");
-                    bp.SetDescription(string.Format("Your natural ability to avoid danger protects you from harm. You gain +{0} to all saving throws per level.", Main.settings.ScalingSaveBonusPerLevel));
+                    string stepString = getStepString(Main.settings.ScalingSaveLevelsPerStep);
+                    bp.SetDescription(string.Format("Your natural ability to avoid danger protects you from harm. You gain +{0} to all saving throws. {1} level beyond that, increases it by +{0}.",
+                        Main.settings.ScalingSaveBonusPerLevel, stepString));
                     bp.m_DescriptionShort = bp.m_Description;
 
                     bp.AddComponent(Helpers.Create<AddScalingSavingThrows>());
@@ -229,6 +231,28 @@ namespace ChampionFeats
 
             static void AddChampionOffences()
             {
+                var ChampionSkills = Helpers.CreateBlueprint<BlueprintFeature>(AddScalingSkillBonus.BLUEPRINTNAME, bp =>
+                {
+                    bp.IsClassFeature = true;
+                    bp.ReapplyOnLevelUp = true;
+                    if (!Main.settings.FeatsAreMythic)
+                    {
+                        bp.Groups = new FeatureGroup[] { FeatureGroup.CombatFeat, FeatureGroup.Feat };
+                    }
+                    else
+                    {
+                        bp.Groups = new FeatureGroup[] { FeatureGroup.MythicFeat };
+                    }
+                    bp.Ranks = 1;
+                    bp.SetName("Champion Skills");
+                    string stepString = getStepString(Main.settings.ScalingSkillsLevelsPerStep);
+                    bp.SetDescription(string.Format("Your prowess knows no boundaries, picking up new skills at an inexplicable pace. You gain +{0} to all skills. {1} level beyond that, this bonus increases by +{0}.",
+                        Main.settings.ScalingSkillsBonusPerLevel, stepString));
+                    bp.m_DescriptionShort = bp.m_Description;
+
+                    bp.AddComponent(Helpers.Create<AddScalingSkillBonus>());
+                });
+
                 var ChampionOffenceAB = Helpers.CreateBlueprint<BlueprintFeature>(AddScalingAttackBonus.BLUEPRINTNAME, bp => {
                     bp.IsClassFeature = true;
                     bp.ReapplyOnLevelUp = true;
@@ -274,11 +298,13 @@ namespace ChampionFeats
 
                 if (!Main.settings.FeatsAreMythic)
                 {
+                    FeatTools.AddAsFeat(ChampionSkills);
                     FeatTools.AddAsFeat(ChampionOffenceAB);
                     FeatTools.AddAsFeat(ChampionOffenceDam);
                 }
                 else
                 {
+                    FeatTools.AddAsMythicFeats(ChampionSkills);
                     FeatTools.AddAsMythicFeats(ChampionOffenceAB);
                     FeatTools.AddAsMythicFeats(ChampionOffenceDam);
                 }

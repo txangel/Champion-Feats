@@ -45,8 +45,11 @@ namespace ChampionFeats.Components
             foreach (var unit in Game.Instance.State.Units)
             {
                 Feature feature = unit.GetFeature(Resources.GetModBlueprint<BlueprintFeature>(BLUEPRINTNAME));
-                feature.TurnOff();
-                feature.TurnOn();
+                if (feature != null)
+                {
+                    feature.TurnOff();
+                    feature.TurnOn();
+                }
             }
         }
 

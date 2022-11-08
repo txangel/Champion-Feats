@@ -145,7 +145,10 @@ namespace ChampionFeats.Config {
             foreach (var u in Game.Instance.State.Units)
             {
                 BlueprintFeature feat = Resources.GetModBlueprint<BlueprintFeature>(AddScalingSavingThrows.BLUEPRINTNAME);
-                u.GetFeature(feat).TurnOff();
+                u.GetFeature(feat)?.TurnOff();
+
+                feat = Resources.GetModBlueprint<BlueprintFeature>(AddScalingSkillBonus.BLUEPRINTNAME);
+                u.GetFeature(feat)?.TurnOff();
             }
         }
     }
@@ -162,7 +165,10 @@ namespace ChampionFeats.Config {
             foreach (var u in Game.Instance.State.Units)
             {
                 BlueprintFeature feat = Resources.GetModBlueprint<BlueprintFeature>(AddScalingSavingThrows.BLUEPRINTNAME);
-                u.GetFeature(feat).TurnOn();
+                u.GetFeature(feat)?.TurnOn();
+
+                feat = Resources.GetModBlueprint<BlueprintFeature>(AddScalingSkillBonus.BLUEPRINTNAME);
+                u.GetFeature(feat)?.TurnOn();
             }
         }
     }

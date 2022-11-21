@@ -13,6 +13,8 @@ Champion Aim - adds a +1 attack bonus to any weapon. Increases by +2 for every t
 
 Champion Saves - adds +2 per level to all saving throws
 
+Champion Skills - adds a +1 bonus to all skill checks. Increases by +1 for every two levels starting at level 3. This can be toggled to add directly to skill ranks if desired, avoiding issues with untrained skill checks and checks against skill ranks that ignore bonuses.
+
 Champion Strikes - adds +1 damage to any weapon attacks. Increases by +1 for every three levels starting at level 4.
 
 Champion Spell Blasts - adds +1 damage to spell attacks. Increases by +1 for every three levels starting at caster level 4.
@@ -22,6 +24,8 @@ Champion Spell Force - adds +1 to the DCs of your spells. Increases by +1 for ev
 Champion Spell Penetration - adds half your caster level to the spell penetration stat of your spells. If you also take the basic Spell Penetration feat, this increases to a full caster level bonus.
 
 You can adjust whether these should be considered normal feats or Mythic feats if you want to make it a bit harder for you in a playthrough you're using this mod in.
+
+All Champion feat bonuses can be modified, to not only change the bonus provided but also how many level steps are required per bonus increase i.e. +1 every two levels or +5 every level.
 
 **How to install**
 

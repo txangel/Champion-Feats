@@ -153,6 +153,11 @@ namespace ChampionFeats
                         c.StepLevel = Main.settings.ScalingACLevelsPerStep;
                     }));
 
+                    bp.AddComponent(Helpers.Create<AddMechanicsFeature>(amf =>
+                    {
+                        amf.m_Feature = AddMechanicsFeature.MechanicsFeatureType.ImmunityToArmorSpeedPenalty;
+                    }));
+
 
                 });
 
@@ -246,11 +251,24 @@ namespace ChampionFeats
                     bp.Ranks = 1;
                     bp.SetName("Champion Skills");
                     string stepString = getStepString(Main.settings.ScalingSkillsLevelsPerStep);
-                    bp.SetDescription(string.Format("Your prowess knows no boundaries, picking up new skills at an inexplicable pace. You gain +{0} to all skills. {1} level beyond that, this bonus increases by +{0}.",
-                        Main.settings.ScalingSkillsBonusPerLevel, stepString));
+                    string descString = string.Format("Your prowess knows no boundaries, picking up new skills at an inexplicable pace. You gain +{0} to all skills. {1} level beyond that, this bonus increases by +{0}.",
+                        Main.settings.ScalingSkillsBonusPerLevel, stepString);
+                    if (AddScalingSkillBonus.AddToBaseValue)
+                    {
+                        descString += " Bonuses from this feat will be applied directly as skill ranks and will not appear separately as a bonus during skill checks.";
+                    }
+                    bp.SetDescription(descString);
                     bp.m_DescriptionShort = bp.m_Description;
 
                     bp.AddComponent(Helpers.Create<AddScalingSkillBonus>());
+                    bp.AddComponent(Helpers.Create<AddIdentifyBonus>(ib =>
+                    {
+                        ib.AllowUsingUntrainedSkill = true;
+                    }));
+                    bp.AddComponent(Helpers.Create<AddMechanicsFeature>(mf =>
+                    {
+                        mf.m_Feature = AddMechanicsFeature.MechanicsFeatureType.MakeKnowledgeCheckUntrained;
+                    }));
                 });
 
                 var ChampionOffenceAB = Helpers.CreateBlueprint<BlueprintFeature>(AddScalingAttackBonus.BLUEPRINTNAME, bp => {

@@ -26,6 +26,19 @@ namespace ChampionFeats.Components
     {
         public const string BLUEPRINTNAME = "RMChampionFeatSkills";
 
+        /*
+         * Why this? Because I want the bonuses to help handle skill checks that are untrained or that have
+         * skill rank checks that ignore bonuses. By applying directly to the skill base value, skills
+         * will appear trained and will have significantly improved ranks to meet any rank requirements.
+         */
+        public static bool AddToBaseValue
+        {
+            get
+            {
+                return Main.settings.AddAsSkillRanks;
+            }
+        }
+
         public static void OnSettingsSave()
         {
             UpdateSkillBonuses();
@@ -67,7 +80,14 @@ namespace ChampionFeats.Components
             }
             if (modToRemove != null)
             {
-                unit.Stats.GetStat(skillType).RemoveModifier(modToRemove);
+                if (AddToBaseValue)
+                {
+                    unit.Stats.GetStat(skillType).BaseValue -= modToRemove.AdditionalBaseValue; // because reasons
+                }
+                else
+                {
+                    unit.Stats.GetStat(skillType).RemoveModifier(modToRemove);
+                }
             }
         }
 
@@ -83,18 +103,38 @@ namespace ChampionFeats.Components
         {
             foreach (StatType type in StatTypeHelper.Skills)
             {
-                unit.Stats.GetStat<ModifiableValue>(type).AddModifier(GetNewModifier(unit, runtime));
+                SkillModifier skillModifier = GetNewModifier(unit, runtime);
+                unit.Stats.GetStat<ModifiableValue>(type).AddModifier(skillModifier);
+                if (AddToBaseValue)
+                {
+                    unit.Stats.GetStat<ModifiableValue>(type).BaseValue += skillModifier.AdditionalBaseValue; // because reasons
+                }
             }
         }
 
-        private static ModifiableValue.Modifier GetNewModifier(UnitEntityData unit, EntityFactComponent runtime)
+        private static SkillModifier GetNewModifier(UnitEntityData unit, EntityFactComponent runtime)
         {
-            return new SkillModifier()
+            if (AddToBaseValue)
             {
-                ModDescriptor = Kingmaker.Enums.ModifierDescriptor.UntypedStackable,
-                Source = runtime.Fact,
-                ModValue = (((unit.Progression.CharacterLevel - 1) / Main.settings.ScalingSkillsLevelsPerStep) + 1) * Main.settings.ScalingSkillsBonusPerLevel
-            };
+                return new SkillModifier()
+                {
+                    ModValue = 0, // bear with me
+                    AdditionalBaseValue = (((unit.Progression.CharacterLevel - 1) / Main.settings.ScalingSkillsLevelsPerStep) + 1) * Main.settings.ScalingSkillsBonusPerLevel,
+                    StackMode = ModifiableValue.StackMode.ForceStack,
+                    ModDescriptor = Kingmaker.Enums.ModifierDescriptor.UntypedStackable,
+                    Source = runtime.Fact
+                };
+            }
+            else
+            {
+                return new SkillModifier()
+                {
+                    ModValue = (((unit.Progression.CharacterLevel - 1) / Main.settings.ScalingSkillsLevelsPerStep) + 1) * Main.settings.ScalingSkillsBonusPerLevel,
+                    StackMode = ModifiableValue.StackMode.ForceStack,
+                    ModDescriptor = Kingmaker.Enums.ModifierDescriptor.UntypedStackable,
+                    Source = runtime.Fact
+                };
+            }
         }
 
         public override void OnTurnOff()
@@ -110,5 +150,6 @@ namespace ChampionFeats.Components
 
     public class SkillModifier : ModifiableValue.Modifier
     {
+        public int AdditionalBaseValue;
     }
 }

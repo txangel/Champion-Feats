@@ -26,6 +26,7 @@ namespace ChampionFeats
         public int ScalingSaveLevelsPerStep = 1;
         public int ScalingSaveBonusPerLevel = 2;
         // Champion Skills
+        public bool AddAsSkillRanks = true;
         public int ScalingSkillsLevelsPerStep = 2;
         public int ScalingSkillsBonusPerLevel = 1;
         // Champion Aim

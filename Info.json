@@ -1,10 +1,10 @@
 {
   "Id": "ChampionFeatsAnew",
   "DisplayName": "Champion Feats Anew",
-  "Author": "RealityMachina, lynnpye",
-  "Version": "1.0.13",
+  "Author": "lynnpye",
+  "Version": "1.0.14",
   "ManagerVersion": "0.23.0.0",
-  "GameVersion": "1.0.0s",
+  "GameVersion": "2.0.0",
   "Requirements": [],
   "AssemblyName": "ChampionFeatsAnew.dll",
   "HomePage": "",

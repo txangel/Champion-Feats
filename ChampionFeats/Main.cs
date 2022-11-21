@@ -95,6 +95,7 @@ namespace ChampionFeats
 
             vert10();
             GUILayout.Label("Champion Skills (Skill Bonus):", options);
+            settings.AddAsSkillRanks = GUILayout.Toggle(settings.AddAsSkillRanks, "Check this to have this feat add directly to skill ranks, rather than just add a bonus to skill checks.\nThis impacts skill checks that cannot be performed untrained e.g. Knowledge checks,\nas well as checks that look at raw skill ranks like Trickster abilities.", options);
             GUILayout.Label(String.Format("Levels Per Step: {0}", settings.ScalingSkillsLevelsPerStep), options);
             settings.ScalingSkillsLevelsPerStep = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingSkillsLevelsPerStep, 1, 10, options));
             GUILayout.Label(String.Format("Bonus Per Step: {0}", settings.ScalingSkillsBonusPerLevel), options);

@@ -156,15 +156,80 @@ namespace ChampionFeats.Extensions {
             selection.m_AllFeatures = selection.m_AllFeatures.OrderBy(feature => feature.Get().Name).ToArray();
         }
 
-        public static void AddFeatures(this BlueprintFeatureSelection selection, params BlueprintFeature[] features) {
-            foreach (var feature in features) {
-                var featureReference = feature.ToReference<BlueprintFeatureReference>();
-                if (!selection.m_AllFeatures.Contains(featureReference)) {
-                    selection.m_AllFeatures = selection.m_AllFeatures.AppendToArray(featureReference);
+        //public static void AddFeatures(this BlueprintFeatureSelection selection, params BlueprintFeature[] features) {
+        //    foreach (var feature in features) {
+        //        var featureReference = feature.ToReference<BlueprintFeatureReference>();
+        //        if (!selection.m_AllFeatures.Contains(featureReference)) {
+        //            selection.m_AllFeatures = selection.m_AllFeatures.AppendToArray(featureReference);
+        //        }
+        //    }
+        //    selection.m_AllFeatures = selection.m_AllFeatures.OrderBy(feature => feature.Get().Name).ToArray();
+        //}
+
+        public static void AddFeatures(this BlueprintFeatureSelection selection, params BlueprintFeature[] features)
+        {
+            selection.AddFeatures(features.Select((BlueprintFeature f) => f.ToReference<BlueprintFeatureReference>()).ToArray());
+        }
+
+        public static void AddFeatures(this BlueprintFeatureSelection selection, params BlueprintFeatureReference[] features)
+        {
+            foreach (BlueprintFeatureReference value in features)
+            {
+                if (!selection.m_AllFeatures.Contains(value))
+                {
+                    selection.m_AllFeatures = selection.m_AllFeatures.AppendToArray(value);
+                }
+
+                if (!selection.m_Features.Contains(value))
+                {
+                    selection.m_Features = selection.m_Features.AppendToArray(value);
                 }
             }
-            selection.m_AllFeatures = selection.m_AllFeatures.OrderBy(feature => feature.Get().Name).ToArray();
+
+            selection.m_AllFeatures = selection.m_AllFeatures.OrderBy(delegate (BlueprintFeatureReference feature)
+            {
+                object obj2 = feature?.Get()?.Name;
+                if (obj2 == null)
+                {
+                    if (feature == null)
+                    {
+                        return null;
+                    }
+
+                    BlueprintFeature blueprintFeature2 = feature.Get();
+                    if (blueprintFeature2 == null)
+                    {
+                        return null;
+                    }
+
+                    obj2 = blueprintFeature2.name;
+                }
+
+                return (string)obj2;
+            }).ToArray();
+            selection.m_Features = selection.m_Features.OrderBy(delegate (BlueprintFeatureReference feature)
+            {
+                object obj = feature?.Get()?.Name;
+                if (obj == null)
+                {
+                    if (feature == null)
+                    {
+                        return null;
+                    }
+
+                    BlueprintFeature blueprintFeature = feature.Get();
+                    if (blueprintFeature == null)
+                    {
+                        return null;
+                    }
+
+                    obj = blueprintFeature.name;
+                }
+
+                return (string)obj;
+            }).ToArray();
         }
+
         public static void AddPrerequisiteFeature(this BlueprintFeature obj, BlueprintFeature feature) {
             obj.AddPrerequisiteFeature(feature, GroupType.All);
         }

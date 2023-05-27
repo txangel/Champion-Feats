@@ -1,4 +1,5 @@
 ﻿using System;
+using ChampionFeats.Config;
 using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Facts;
 using Kingmaker.Blueprints.JsonSystem;
@@ -19,11 +20,11 @@ namespace ChampionFeats.Components
     [TypeId("be0495e1ab3a4f0ab50cede89bd1b087")]
     class AddScalingSpellDC : UnitFactComponentDelegate, IInitiatorRulebookHandler<RuleCalculateAbilityParams>, IRulebookHandler<RuleCalculateAbilityParams>, ISubscriber, IInitiatorRulebookSubscriber
     {
+        public const string BLUEPRINTNAME = "RMChampionFeatOffenceSpellDC";
 
         public void OnEventAboutToTrigger(RuleCalculateAbilityParams evt)
         {
-
-            if(evt.Spell == null)
+            if (evt.Spell == null)
             {
                 return; // not a spell at all
             }
@@ -31,10 +32,14 @@ namespace ChampionFeats.Components
             {
                 return; // not an ACTUAL spell (or spell-like, anyway)
             }
+            if (Blueprints.HasNPCImmortalityBuff(Fact.Owner))
+            {
+                return;
+            }
 
             //we're here, so we know we're a spell. 
 
-            int bonus = Value.Calculate(Context);
+            int bonus = (((this.Fact.Owner.Progression.CharacterLevel - 1) / Main.settings.ScalingSpellDCLevelsPerStep) + 1) * Main.settings.ScalingSpellDCBonusPerStep;
             evt.AddBonusDC(Math.Max(1, bonus), ModifierDescriptor.UntypedStackable);
 
         }
@@ -42,7 +47,5 @@ namespace ChampionFeats.Components
         public void OnEventDidTrigger(RuleCalculateAbilityParams evt)
         {
         }
-
-        public ContextValue Value;
     }
 }

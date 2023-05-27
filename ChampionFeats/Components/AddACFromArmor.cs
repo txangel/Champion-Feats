@@ -8,6 +8,8 @@ using Kingmaker.UnitLogic;
 using Kingmaker.UnitLogic.Buffs;
 using System;
 using Kingmaker.Blueprints.Items.Armors;
+using ChampionFeats.Config;
+
 namespace ChampionFeats.Components
 {
 
@@ -19,11 +21,13 @@ namespace ChampionFeats.Components
            IUnitEquipmentHandler,
            IUnitBuffHandler
     {
+        public const string BLUEPRINTNAME = "RMChampionFeatDefenceAC";
 
         public override void OnTurnOn()
         {
             base.OnTurnOn();
-            UpdateModifier();
+            //UpdateModifier();
+            ActivateModifier();
         }
 
         public override void OnTurnOff()
@@ -38,19 +42,23 @@ namespace ChampionFeats.Components
             {
                 return;
             }
-            UpdateModifier();
+            OnRecalculate();
+            //UpdateModifier();
         }
 
         public void HandleUnitChangeActiveEquipmentSet(UnitDescriptor unit)
         {
-            UpdateModifier();
+            OnRecalculate();
+            //UpdateModifier();
         }
 
+        /*
         private void UpdateModifier()
         {
             DeactivateModifier();
             ActivateModifier();
         }
+        */
 
         private void ActivateModifier()
         {
@@ -87,24 +95,30 @@ namespace ChampionFeats.Components
                     break;
             }
 
-            itemBonus *= Math.Max(1 + (Fact.Owner.Progression.CharacterLevel / 5), 1);
+            if (Blueprints.HasNPCImmortalityBuff(Fact.Owner))
+            {
+                return 0;
+            }
+            itemBonus *= StepLevel == 1 ? Fact.Owner.Progression.CharacterLevel : Math.Max(1 + (Fact.Owner.Progression.CharacterLevel / StepLevel), 1);
 
             return itemBonus;
         }
 
         public void HandleBuffDidAdded(Buff buff)
         {
-            UpdateModifier();
+            //UpdateModifier();
+            OnRecalculate();
         }
 
         public void HandleBuffDidRemoved(Buff buff)
         {
-            UpdateModifier();
+            //UpdateModifier();
+            OnRecalculate();
         }
 
         public int LightBonus;
         public int MediumBonus;
         public int HeavyBonus;
-        public int StepLevel = 5;
+        public int StepLevel;
     }
 }

@@ -11,6 +11,8 @@ using ChampionFeats.Utilities;
 using UnityEngine;
 using UnityModManagerNet;
 using Kingmaker.Localization;
+using System.IO;
+using ChampionFeats.Components;
 //using static UnityModManagerNet.UnityModManager;
 namespace ChampionFeats
 {
@@ -21,7 +23,7 @@ namespace ChampionFeats
             modEntry.OnToggle = new Func<UnityModManager.ModEntry, bool, bool>(Main.OnToggle);
             var harmony = new Harmony(modEntry.Info.Id);
 
-            Main.settings = UnityModManager.ModSettings.Load<Settings>(modEntry);
+            settings = UnityModManager.ModSettings.Load<Settings>(modEntry);
             ModSettings.ModEntry = modEntry;
             ModSettings.LoadAllSettings();
             modEntry.OnGUI = new Action<UnityModManager.ModEntry>(Main.OnGUI);
@@ -33,18 +35,26 @@ namespace ChampionFeats
 
         private static bool OnToggle(UnityModManager.ModEntry modEntry, bool value)
         {
-            Main.iAmEnabled = value;
+            iAmEnabled = value;
             return true;
         }
 
         private static void OnSaveGUI(UnityModManager.ModEntry modEntry)
         {
-            Main.settings.Save(modEntry);
+            settings.Save(modEntry);
+            AddScalingSavingThrows.OnSettingsSave();
+            AddScalingSkillBonus.OnSettingsSave();
+        }
+
+        private static void vert10()
+        {
+            GUILayout.Space(10);
+            GUILayout.Label("--------------------------------------------------------");
         }
 
         private static void OnGUI(UnityModManager.ModEntry modEntry)
         {
-            if (!Main.iAmEnabled)
+            if (!iAmEnabled)
             {
                 return;
             }
@@ -56,15 +66,90 @@ namespace ChampionFeats
             };
             GUILayout.Label("FOR BEST EFFECT: restart the game after changing these settings.", options);
 
-            Main.settings.FeatsAreMythic = GUILayout.Toggle(Main.settings.FeatsAreMythic, "Check this to make these feats require Mythic Feat selections instead of regular Feat selections", options);
+            settings.FeatsAreMythic = GUILayout.Toggle(settings.FeatsAreMythic, "Check this to make these feats require Mythic Feat selections instead of regular Feat selections", options);
 
-  
+            vert10();
+            GUILayout.Label("Champion Protection (AC bonus for armor):", options);
+            GUILayout.Label(String.Format("Levels Per Step: {0}", settings.ScalingACLevelsPerStep), options);
+            settings.ScalingACLevelsPerStep = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingACLevelsPerStep, 1, 10, options));
+            GUILayout.Label(String.Format("Light Armor Bonus Per Step: {0}", settings.ScalingACArmorBonusLightPerStep), options);
+            settings.ScalingACArmorBonusLightPerStep = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingACArmorBonusLightPerStep, 1, 10, options));
+            GUILayout.Label(String.Format("Medium Armor Bonus Per Step: {0}", settings.ScalingACArmorBonusMediumPerStep), options);
+            settings.ScalingACArmorBonusMediumPerStep = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingACArmorBonusMediumPerStep, 1, 20, options));
+            GUILayout.Label(String.Format("Heavy Armor Bonus Per Step: {0}", settings.ScalingACArmorBonusHeavyPerStep), options);
+            settings.ScalingACArmorBonusHeavyPerStep = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingACArmorBonusHeavyPerStep, 1, 30, options));
+
+            vert10();
+            GUILayout.Label("Champion Guard (DR):", options);
+            GUILayout.Label(String.Format("Levels Per Step: {0}", settings.ScalingDRLevelsPerStep), options);
+            settings.ScalingDRLevelsPerStep = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingDRLevelsPerStep, 1, 10, options));
+            GUILayout.Label(String.Format("DR Bonus Per Step: {0}", settings.ScalingDRBonusPerStep), options);
+            settings.ScalingDRBonusPerStep = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingDRBonusPerStep, 1, 20, options));
+
+            vert10();
+            GUILayout.Label("Champion Saves (Saving Throws):", options);
+            GUILayout.Label(String.Format("Levels Per Step: {0}", settings.ScalingSaveLevelsPerStep), options);
+            settings.ScalingSaveLevelsPerStep = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingSaveLevelsPerStep, 1, 10, options));
+            GUILayout.Label(String.Format("Bonus Per Level: {0}", settings.ScalingSaveBonusPerLevel), options);
+            settings.ScalingSaveBonusPerLevel = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingSaveBonusPerLevel, 1, 10, options));
+
+            vert10();
+            GUILayout.Label("Champion Skills (Skill Bonus):", options);
+            settings.AddAsSkillRanks = GUILayout.Toggle(settings.AddAsSkillRanks, "Check this to have this feat add directly to skill ranks, rather than just add a bonus to skill checks.\nThis impacts skill checks that cannot be performed untrained e.g. Knowledge checks,\nas well as checks that look at raw skill ranks like Trickster abilities.", options);
+            GUILayout.Label(String.Format("Levels Per Step: {0}", settings.ScalingSkillsLevelsPerStep), options);
+            settings.ScalingSkillsLevelsPerStep = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingSkillsLevelsPerStep, 1, 10, options));
+            GUILayout.Label(String.Format("Bonus Per Step: {0}", settings.ScalingSkillsBonusPerLevel), options);
+            settings.ScalingSkillsBonusPerLevel = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingSkillsBonusPerLevel, 1, 10, options));
+
+            vert10();
+            GUILayout.Label("Champion Aim (Weapon AB):", options);
+            GUILayout.Label(String.Format("Levels Per Step: {0}", settings.ScalingABLevelsPerStep), options);
+            settings.ScalingABLevelsPerStep = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingABLevelsPerStep, 1, 10, options));
+            GUILayout.Label(String.Format("Bonus Per Step: {0}", settings.ScalingABBonusPerStep), options);
+            settings.ScalingABBonusPerStep = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingABBonusPerStep, 1, 10, options));
+
+            vert10();
+            GUILayout.Label("Champion Strikes (Weapon Damage):", options);
+            GUILayout.Label(String.Format("Levels Per Step: {0}", settings.ScalingDamageLevelsPerStep), options);
+            settings.ScalingDamageLevelsPerStep = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingDamageLevelsPerStep, 1, 10, options));
+            GUILayout.Label(String.Format("Bonus Per Step: {0}", settings.ScalingDamageBonusPerStep), options);
+            settings.ScalingDamageBonusPerStep = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingDamageBonusPerStep, 1, 10, options));
+
+            vert10();
+            GUILayout.Label("Champion Spell Blasts (Spell Damage):", options);
+            GUILayout.Label(String.Format("Levels Per Step: {0}", settings.ScalingSpellDamageLevelsPerStep), options);
+            settings.ScalingSpellDamageLevelsPerStep = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingSpellDamageLevelsPerStep, 1, 10, options));
+            GUILayout.Label(String.Format("Bonus Per Step: {0}", settings.ScalingSpellDamageBonusPerStep), options);
+            settings.ScalingSpellDamageBonusPerStep = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingSpellDamageBonusPerStep, 1, 10, options));
+
+            vert10();
+            GUILayout.Label("Champion Spell Force (Spell DC):", options);
+            GUILayout.Label(String.Format("Levels Per Step: {0}", settings.ScalingSpellDCLevelsPerStep), options);
+            settings.ScalingSpellDCLevelsPerStep = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingSpellDCLevelsPerStep, 1, 10, options));
+            GUILayout.Label(String.Format("Bonus Per Step: {0}", settings.ScalingSpellDCBonusPerStep), options);
+            settings.ScalingSpellDCBonusPerStep = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingSpellDCBonusPerStep, 1, 10, options));
+
+            vert10();
+            GUILayout.Label("Champion Spell Penetration (Spell Penetration):", options);
+            GUILayout.Label(String.Format("Bonus Per Level: {0}", settings.ScalingSpellPenBonusPerLevel), options);
+            settings.ScalingSpellPenBonusPerLevel = Mathf.RoundToInt(GUILayout.HorizontalSlider(settings.ScalingSpellPenBonusPerLevel, 1, 10, options));
+
         }
 
 
         private static bool iAmEnabled;
 
         public static Settings settings;
+
+        public static void Log2File(string msg)
+        {
+            /*
+            StreamWriter streamWriter = File.AppendText("C:\\temp\\log.txt");
+            streamWriter.WriteLine(msg);
+            streamWriter.Flush();
+            streamWriter.Close();
+            */
+        }
 
         public static void Log(string msg)
         {
@@ -91,7 +176,7 @@ namespace ChampionFeats
 
         public static LocalizedString MakeLocalizedString(string key, string value)
         {
-            LocalizationManager.CurrentPack.Strings[key] = value;
+            LocalizationManager.CurrentPack.PutString(key, value);
             LocalizedString localizedString = new LocalizedString();
             typeof(LocalizedString).GetField("m_Key", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(localizedString, key);
             return localizedString;

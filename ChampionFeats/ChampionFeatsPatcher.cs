@@ -1,33 +1,17 @@
-﻿using HarmonyLib;
-using Kingmaker.Blueprints;
-using Kingmaker.Blueprints.JsonSystem;
-using Kingmaker.Enums;
-using Kingmaker.UnitLogic.Abilities.Blueprints;
-using Kingmaker.UnitLogic.Abilities.Components;
-using Kingmaker.UnitLogic.Mechanics;
-using Kingmaker.UnitLogic.Mechanics.Actions;
-using Kingmaker.UnitLogic.Mechanics.Components;
+﻿using ChampionFeats.Components;
 using ChampionFeats.Extensions;
-using ChampionFeats.Config;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Kingmaker.UnitLogic.Buffs.Blueprints;
-using Kingmaker.Designers.Mechanics.Buffs;
-using Kingmaker.UnitLogic.Mechanics.Properties;
-using Kingmaker.UnitLogic;
-using Kingmaker.Blueprints.Classes;
-using Kingmaker.Blueprints.Classes.Prerequisites;
-using Kingmaker.Blueprints.Classes.Selection;
-using Kingmaker.Designers.Mechanics.Facts;
 using ChampionFeats.Utilities;
-using ChampionFeats.Components;
-using Kingmaker.UnitLogic.FactLogic;
-using Kingmaker.Enums.Damage;
+using HarmonyLib;
+using Kingmaker.Blueprints;
+using Kingmaker.Blueprints.Classes;
+using Kingmaker.Blueprints.Classes.Selection;
+using Kingmaker.Blueprints.JsonSystem;
+using Kingmaker.Designers.Mechanics.Facts;
 using Kingmaker.Designers.Mechanics.Recommendations;
-using Kingmaker.EntitySystem.Stats;
+using Kingmaker.UnitLogic.FactLogic;
+using Kingmaker.UnitLogic.Mechanics;
+using Kingmaker.UnitLogic.Mechanics.Components;
+using System;
 
 namespace ChampionFeats
 {
@@ -104,7 +88,7 @@ namespace ChampionFeats
                     levelsPerStep = 40;
                 }
                 // max level 40
-                int steps = 40 / levelsPerStep + 1;
+                int steps = (40 / levelsPerStep) + 1;
 
                 ContextRankConfig.CustomProgressionItem[] items = new ContextRankConfig.CustomProgressionItem[steps];
                 int bonus = bonusPerStep;
@@ -129,7 +113,8 @@ namespace ChampionFeats
 
             static void AddChampionDefences()
             {
-                var ChampionDefenceAC = Helpers.CreateBlueprint<BlueprintFeature>(AddACFromArmor.BLUEPRINTNAME, bp => {
+                var ChampionDefenceAC = Helpers.CreateBlueprint<BlueprintFeature>(AddACFromArmor.BLUEPRINTNAME, bp =>
+                {
                     bp.IsClassFeature = true;
                     bp.ReapplyOnLevelUp = true;
                     if (!Main.settings.FeatsAreMythic)
@@ -146,7 +131,8 @@ namespace ChampionFeats
                     bp.SetDescription(String.Format("Whether it's from practice or tutoring, your ability to defend yourself in armor surpasses most. You gain +{0}/+{1}/+{2} AC while wearing light/medium/heavy armor. {3} level beyond that, this bonus increases by the same increment.",
                         Main.settings.ScalingACArmorBonusLightPerStep, Main.settings.ScalingACArmorBonusMediumPerStep, Main.settings.ScalingACArmorBonusHeavyPerStep, stepString));
                     bp.m_DescriptionShort = bp.m_Description;
-                    bp.AddComponent(Helpers.Create<AddACFromArmor>(c => {
+                    bp.AddComponent(Helpers.Create<AddACFromArmor>(c =>
+                    {
                         c.LightBonus = Main.settings.ScalingACArmorBonusLightPerStep;
                         c.MediumBonus = Main.settings.ScalingACArmorBonusMediumPerStep;
                         c.HeavyBonus = Main.settings.ScalingACArmorBonusHeavyPerStep;
@@ -162,7 +148,8 @@ namespace ChampionFeats
                 });
 
 
-                var ChampionDefenceDR = Helpers.CreateBlueprint<BlueprintFeature>(AddScalingDamageResistance.BLUEPRINTNAME, bp => {
+                var ChampionDefenceDR = Helpers.CreateBlueprint<BlueprintFeature>(AddScalingDamageResistance.BLUEPRINTNAME, bp =>
+                {
                     bp.IsClassFeature = true;
                     bp.ReapplyOnLevelUp = true;
                     if (!Main.settings.FeatsAreMythic)
@@ -179,6 +166,13 @@ namespace ChampionFeats
                     bp.SetDescription(String.Format("You stand firm and resist whatever physical harm comes for you, no matter what it is. You gain +{0} DR/-. {1} level beyond that, increases it by +{0}.",
                         Main.settings.ScalingDRBonusPerStep, stepString));
                     bp.m_DescriptionShort = bp.m_Description;
+
+                    /*
+                    bp.AddComponent(Helpers.Create<AddScalingDamageResistance.AddDamageResistanceAllScaling>(c =>
+                    {
+                        c.name = "RMChampionGuardBuff";
+                    }));
+                    */
 
                     bp.AddComponent(Helpers.Create<AddDamageResistancePhysical>(c =>
                     {
@@ -271,7 +265,8 @@ namespace ChampionFeats
                     }));
                 });
 
-                var ChampionOffenceAB = Helpers.CreateBlueprint<BlueprintFeature>(AddScalingAttackBonus.BLUEPRINTNAME, bp => {
+                var ChampionOffenceAB = Helpers.CreateBlueprint<BlueprintFeature>(AddScalingAttackBonus.BLUEPRINTNAME, bp =>
+                {
                     bp.IsClassFeature = true;
                     bp.ReapplyOnLevelUp = true;
                     if (!Main.settings.FeatsAreMythic)
@@ -288,12 +283,13 @@ namespace ChampionFeats
                     bp.SetDescription(String.Format("Whether it's from practice or tutoring, your ability to hit targets surpasses most. You gain +{0} attack bonus. {1} level beyond that, increases it by +{0}.",
                         Main.settings.ScalingABBonusPerStep, stepString));
                     bp.m_DescriptionShort = bp.m_Description;
-                    bp.AddComponent(Helpers.Create<AddScalingAttackBonus>(c => {}));
+                    bp.AddComponent(Helpers.Create<AddScalingAttackBonus>(c => { }));
 
                 });
 
 
-                var ChampionOffenceDam = Helpers.CreateBlueprint<BlueprintFeature>(AddScalingDamageBonus.BLUEPRINTNAME, bp => {
+                var ChampionOffenceDam = Helpers.CreateBlueprint<BlueprintFeature>(AddScalingDamageBonus.BLUEPRINTNAME, bp =>
+                {
                     bp.IsClassFeature = true;
                     bp.ReapplyOnLevelUp = true;
                     if (!Main.settings.FeatsAreMythic)
@@ -311,7 +307,7 @@ namespace ChampionFeats
                     bp.SetDescription(String.Format("Your weapon attacks strike hard, no matter how tough the foe. You gain +{0} damage to attacks. {1} level beyond that, increases it by +{0}.",
                         Main.settings.ScalingDamageBonusPerStep, stepString));
                     bp.m_DescriptionShort = bp.m_Description;
-                    bp.AddComponent(Helpers.Create<AddScalingDamageBonus>(c => {}));
+                    bp.AddComponent(Helpers.Create<AddScalingDamageBonus>(c => { }));
                 });
 
                 if (!Main.settings.FeatsAreMythic)
@@ -331,7 +327,8 @@ namespace ChampionFeats
             {
                 var SpellPen = Resources.GetBlueprint<BlueprintFeature>("ee7dc126939e4d9438357fbd5980d459");
 
-                var ChampionOffenceSpellDam = Helpers.CreateBlueprint<BlueprintFeature>(AddScalingSpellDamage.BLUEPRINTNAME, bp => {
+                var ChampionOffenceSpellDam = Helpers.CreateBlueprint<BlueprintFeature>(AddScalingSpellDamage.BLUEPRINTNAME, bp =>
+                {
                     bp.IsClassFeature = true;
                     bp.ReapplyOnLevelUp = true;
                     if (!Main.settings.FeatsAreMythic)
@@ -348,14 +345,16 @@ namespace ChampionFeats
                     bp.SetDescription(String.Format("Your magical arts strike hard, no matter how tough the foe. You gain +{0} damage to spell attacks per damage die. {1} level beyond that, increases it by +{0}.",
                         Main.settings.ScalingSpellDamageBonusPerStep, stepString));
                     bp.m_DescriptionShort = bp.m_Description;
-                    bp.AddComponent(Helpers.Create<AddScalingSpellDamage>(c => {}));
+                    bp.AddComponent(Helpers.Create<AddScalingSpellDamage>(c => { }));
                     bp.AddComponent(Helpers.Create<RecommendationRequiresSpellbook>());
-                    bp.AddComponent(Helpers.Create<FeatureTagsComponent>(c => {
+                    bp.AddComponent(Helpers.Create<FeatureTagsComponent>(c =>
+                    {
                         c.FeatureTags = FeatureTag.Magic;
                     }));
                 });
 
-                var ChampionOffenceSpellDC = Helpers.CreateBlueprint<BlueprintFeature>(AddScalingSpellDC.BLUEPRINTNAME, bp => {
+                var ChampionOffenceSpellDC = Helpers.CreateBlueprint<BlueprintFeature>(AddScalingSpellDC.BLUEPRINTNAME, bp =>
+                {
                     bp.IsClassFeature = true;
                     bp.ReapplyOnLevelUp = true;
                     if (!Main.settings.FeatsAreMythic)
@@ -372,14 +371,16 @@ namespace ChampionFeats
                     bp.SetDescription(String.Format("Your magical arts are overwhelming for enemies to deal with. You gain +{0} to the DC of your spells. {1} level beyond that, increases it by +{0}.",
                         Main.settings.ScalingSpellDCBonusPerStep, stepString));
                     bp.m_DescriptionShort = bp.m_Description;
-                    bp.AddComponent(Helpers.Create<AddScalingSpellDC>(c => {}));
+                    bp.AddComponent(Helpers.Create<AddScalingSpellDC>(c => { }));
                     bp.AddComponent(Helpers.Create<RecommendationRequiresSpellbook>());
-                    bp.AddComponent(Helpers.Create<FeatureTagsComponent>(c => {
+                    bp.AddComponent(Helpers.Create<FeatureTagsComponent>(c =>
+                    {
                         c.FeatureTags = FeatureTag.Magic;
                     }));
                 });
 
-                var ChampionOffenceSpellPen = Helpers.CreateBlueprint<BlueprintFeature>(AddScalingSpellPenetration.BLUEPRINTNAME, bp => {
+                var ChampionOffenceSpellPen = Helpers.CreateBlueprint<BlueprintFeature>(AddScalingSpellPenetration.BLUEPRINTNAME, bp =>
+                {
                     bp.IsClassFeature = true;
                     bp.ReapplyOnLevelUp = true;
                     if (!Main.settings.FeatsAreMythic)
@@ -395,11 +396,13 @@ namespace ChampionFeats
                     bp.SetDescription(String.Format("Your magical arts are trained to pierce even the thickest of protections. Half of +{0} per character level (minimum of +1) is added as bonus spell penetration. If you have Spell Penetration, it's +{0} per character level instead.",
                         Main.settings.ScalingSpellPenBonusPerLevel));
                     bp.m_DescriptionShort = bp.m_Description;
-                    bp.AddComponent(Helpers.Create<AddScalingSpellPenetration>(c => {
+                    bp.AddComponent(Helpers.Create<AddScalingSpellPenetration>(c =>
+                    {
                         c.m_SpellPen = SpellPen.ToReference<BlueprintUnitFactReference>();
                     }));
                     bp.AddComponent(Helpers.Create<RecommendationRequiresSpellbook>());
-                    bp.AddComponent(Helpers.Create<FeatureTagsComponent>(c => {
+                    bp.AddComponent(Helpers.Create<FeatureTagsComponent>(c =>
+                    {
                         c.FeatureTags = FeatureTag.Magic;
                     }));
                 });

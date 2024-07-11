@@ -1,26 +1,9 @@
-﻿using Kingmaker.Blueprints.Facts;
-using Kingmaker.Blueprints.JsonSystem;
-using Kingmaker.Blueprints;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Kingmaker.UnitLogic.FactLogic;
-using System.Runtime.InteropServices;
-using Kingmaker.RuleSystem.Rules.Damage;
-using Kingmaker.Items;
+﻿using Kingmaker.Blueprints;
 using Kingmaker.Blueprints.Classes;
-using Kingmaker.UnitLogic.Buffs.Blueprints;
-using Kingmaker.UnitLogic;
+using Kingmaker.Blueprints.Facts;
+using Kingmaker.Blueprints.JsonSystem;
 using Kingmaker.PubSubSystem;
-using ChampionFeats.Extensions;
-using ChampionFeats.Utilities;
-using Kingmaker.Enums;
-using Kingmaker.UnitLogic.Mechanics.Components;
-using Kingmaker.Enums.Damage;
-using Kingmaker.UnitLogic.Mechanics;
-using Kingmaker.EntitySystem.Entities;
+using Kingmaker.UnitLogic;
 
 namespace ChampionFeats.Components
 {
@@ -36,5 +19,20 @@ namespace ChampionFeats.Components
     public class AddScalingDamageResistance : UnitFactComponentDelegate, ISubscriber
     {
         public const string BLUEPRINTNAME = "RMChampionFeatDefenceDR";
+
+        /*
+        public class AddDamageResistanceAllScaling : AddDamageResistanceBase
+        {
+            public override bool Bypassed(ComponentRuntime runtime, BaseDamage damage, ItemEntityWeapon weapon)
+            {
+                return runtime == null || runtime.Owner == null || Blueprints.HasNPCImmortalityBuff(runtime.Owner);
+            }
+
+            public override int CalculateValue(ComponentRuntime runtime)
+            {
+                return (((runtime.Owner.Progression.CharacterLevel - 1) / Main.settings.ScalingDRLevelsPerStep) + 1) * Main.settings.ScalingDRBonusPerStep;
+            }
+        }
+        */
     }
 }
